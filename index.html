@@ -1,27 +1,15 @@
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
-  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+        content="Synthetic Data in the Era of LLMs (tutorial at ACL 2025).">
+  <meta name="keywords" content="Synthetic Data, ACL 2025">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nerfies: Deformable Neural Radiance Fields</title>
+  <title>Synthetic Data in the Era of LLMs</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-
-    gtag('config', 'G-PYVRSFMDRL');
-  </script>
-
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
 
@@ -32,14 +20,58 @@
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="icon" href="./static/images/favicon.svg">
+  <link rel="icon" href="./static/images/favicon.ico">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
   <script src="./static/js/index.js"></script>
+
+  
+  <style>
+    .presenter-profiles {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .presenter-card {
+      text-align: center;
+      flex: 0 1 150px;
+    }
+    
+    .presenter-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .presenter-image:hover {
+      transform: scale(1.05);
+    }
+    
+    .presenter-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #03a5fc;
+    }
+    
+    .presenter-affiliation {
+      font-size: 1.2rem;
+      color: #666;
+    }
+  </style>
 </head>
+
+
 <body>
 
 <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -50,36 +82,7 @@
       <span aria-hidden="true"></span>
     </a>
   </div>
-  <div class="navbar-menu">
-    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-      <a class="navbar-item" href="https://keunhong.com">
-      <span class="icon">
-          <i class="fas fa-home"></i>
-      </span>
-      </a>
 
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More Research
-        </a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" href="https://hypernerf.github.io">
-            HyperNeRF
-          </a>
-          <a class="navbar-item" href="https://nerfies.github.io">
-            Nerfies
-          </a>
-          <a class="navbar-item" href="https://latentfusion.github.io">
-            LatentFusion
-          </a>
-          <a class="navbar-item" href="https://photoshape.github.io">
-            PhotoShape
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div>
 </nav>
 
 
@@ -88,161 +91,72 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Nerfies: Deformable Neural Radiance Fields</h1>
-          <div class="is-size-5 publication-authors">
-            <span class="author-block">
-              <a href="https://keunhong.com">Keunhong Park</a><sup>1</sup>,</span>
-            <span class="author-block">
-              <a href="https://utkarshsinha.com">Utkarsh Sinha</a><sup>2</sup>,</span>
-            <span class="author-block">
-              <a href="https://jonbarron.info">Jonathan T. Barron</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="http://sofienbouaziz.com">Sofien Bouaziz</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://www.danbgoldman.com">Dan B Goldman</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://homes.cs.washington.edu/~seitz/">Steven M. Seitz</a><sup>1,2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="http://www.ricardomartinbrualla.com">Ricardo Martin-Brualla</a><sup>2</sup>
-            </span>
-          </div>
+          <h1 class="title is-2 publication-title">Synthetic Data in the Era of LLMs</h1>
+          <h1 class="title is-4 publication-title">Tutorial at <a href="https://2025.aclweb.org/program/">ACL 2025</a>
+          <h1 class="title is-4 publication-title">Vienna, Austria</h1>
 
-          <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>University of Washington,</span>
-            <span class="author-block"><sup>2</sup>Google Research</span>
+          <!-- Profile Pictures Section -->
+          <div class="presenter-profiles">
+            <div class="presenter-card">
+              <img src="static/images/a.jpg" alt="Vijay Viswanathan" class="presenter-image">
+              <a href="https://www.cs.cmu.edu/~vijayv"><div class="presenter-name">Vijay Viswanathan</div></a>
+              <div class="presenter-affiliation">Carnegie Mellon University</div>
+            </div>
+            <div class="presenter-card">
+              <img src="static/images/b.jpg" alt="Xiang Yue" class="presenter-image">
+              <a href="https://xiangyue9607.github.io/"><div class="presenter-name">Xiang Yue</div></a>
+              <div class="presenter-affiliation">Carnegie Mellon University</div>
+            </div>
+            <div class="presenter-card">
+              <img src="static/images/c.jpg" alt="Alisa Liu" class="presenter-image">
+              <a href="https://alisawuffles.github.io/"><div class="presenter-name">Alisa Liu</div></a>
+              <div class="presenter-affiliation">University of Washington</div>
+            </div>
+            <div class="presenter-card">
+              <img src="static/images/d.jpg" alt="Yizhong Wang" class="presenter-image">
+              <a href="https://homes.cs.washington.edu/~yizhongw/"><div class="presenter-name">Yizhong Wang</div></a>
+              <div class="presenter-affiliation">University of Washington</div>
+            </div>
+            <div class="presenter-card">
+              <img src="static/images/e.jpg" alt="Graham Neubig" class="presenter-image">
+              <a href="https://www.phontron.com/"><div class="presenter-name">Graham Neubig</div></a>
+              <div class="presenter-affiliation">Carnegie Mellon University</div>
+            </div>
           </div>
 
           <div class="column has-text-centered">
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="https://arxiv.org/pdf/2011.12948"
+                <a href="https://us06web.zoom.us/rec/play/jLTcNKnh2lMcK63uNpW-9g-P_wUN85RFNLYGzxhL6gCkjqzPIGieJYXdeP_xGGuj6ZxP-nvYpDQQ22k9.9o2qq60z7LHyaMUq"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
-                      <i class="fas fa-file-pdf"></i>
+                      <i class="fas fa-camera"></i>
                   </span>
-                  <span>Paper</span>
+                  <span>Tutorial Recording</span>
                 </a>
               </span>
               <span class="link-block">
-                <a href="https://arxiv.org/abs/2011.12948"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                </a>
-              </span>
-              <!-- Video Link. -->
-              <span class="link-block">
-                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-youtube"></i>
-                  </span>
-                  <span>Video</span>
-                </a>
-              </span>
-              <!-- Code Link. -->
-              <span class="link-block">
-                <a href="https://github.com/google/nerfies"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code</span>
-                  </a>
-              </span>
-              <!-- Dataset Link. -->
-              <span class="link-block">
-                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                <a href="static/slides/slides.pdf"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="far fa-images"></i>
                   </span>
-                  <span>Data</span>
-                  </a>
+                  <span>Slides</span>
+                </a>
+              </span>
+             <span class="link-block">
+                <a href="https://aclanthology.org/2025.acl-tutorials.7/"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Presenter Biographies</span>
+                </a>
+              </span>
             </div>
 
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <video id="teaser" autoplay muted loop playsinline height="100%">
-        <source src="./static/videos/teaser.mp4"
-                type="video/mp4">
-      </video>
-      <h2 class="subtitle has-text-centered">
-        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
-        free-viewpoint
-        portraits.
-      </h2>
-    </div>
-  </div>
-</section>
-
-
-<section class="hero is-light is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-steve">
-          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/steve.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-chair-tp">
-          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/chair-tp.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-shiba">
-          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/shiba.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-fullbody">
-          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/fullbody.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-blueshirt">
-          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/blueshirt.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-mask">
-          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/mask.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-coffee">
-          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/coffee.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-toby">
-          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/toby2.mp4"
-                    type="video/mp4">
-          </video>
         </div>
       </div>
     </div>
@@ -253,186 +167,239 @@
 <section class="section">
   <div class="container is-max-desktop">
     <!-- Abstract. -->
-    <div class="columns is-centered has-text-centered">
+    <div class="columns is-centered">
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            We present the first method capable of photorealistically reconstructing a non-rigidly
-            deforming scene using photos/videos captured casually from mobile phones.
+            Progress in natural language processing has historically been driven by better data, and researchers today are increasingly using ‘synthetic data’ - data generated with the assistance of large language models - to make dataset construction faster and cheaper. 
           </p>
           <p>
-            Our approach augments neural radiance fields
-            (NeRF) by optimizing an
-            additional continuous volumetric deformation field that warps each observed point into a
-            canonical 5D NeRF.
-            We observe that these NeRF-like deformation fields are prone to local minima, and
-            propose a coarse-to-fine optimization method for coordinate-based models that allows for
-            more robust optimization.
-            By adapting principles from geometry processing and physical simulation to NeRF-like
-            models, we propose an elastic regularization of the deformation field that further
-            improves robustness.
+            However, most synthetic data generation approaches are executed in an ad hoc manner and ‘reinvent the wheel’ rather than build on prior foundations. This tutorial seeks to build a shared understanding of recent progress in synthetic data generation from NLP and related fields by grouping and describing major methods, applications, and open problems.
           </p>
           <p>
-            We show that <span class="dnerf">Nerfies</span> can turn casually captured selfie
-            photos/videos into deformable NeRF
-            models that allow for photorealistic renderings of the subject from arbitrary
-            viewpoints, which we dub <i>"nerfies"</i>. We evaluate our method by collecting data
-            using a
-            rig with two mobile phones that take time-synchronized photos, yielding train/validation
-            images of the same pose at different viewpoints. We show that our method faithfully
-            reconstructs non-rigidly deforming scenes and reproduces unseen views with high
-            fidelity.
+            Our tutorial will be divided into four main sections. First, we will describe algorithms for producing high-quality synthetic data. Second, we will describe how synthetic data can be used to advance the general-purpose development and study of language models. Third, we will demonstrate how to customize synthetic data generation to support scenario-specific applications. Finally, we will discuss open questions about the production and use of synthetic data that must be answered to overcome some of their current limitations. Our goal is that by unifying recent advances in this emerging research direction, we can build foundations upon which the community can improve the rigor, understanding, and effectiveness of synthetic data moving forward.
+            </p>
           </p>
         </div>
       </div>
     </div>
     <!--/ Abstract. -->
 
-    <!-- Paper video. -->
-    <div class="columns is-centered has-text-centered">
+ <!-- Schedule. -->
+    <div class="columns is-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Video</h2>
-        <div class="publication-video">
-          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
-                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-    <!--/ Paper video. -->
-  </div>
-</section>
-
-
-<section class="section">
-  <div class="container is-max-desktop">
-
-    <div class="columns is-centered">
-
-      <!-- Visual Effects. -->
-      <div class="column">
-        <div class="content">
-          <h2 class="title is-3">Visual Effects</h2>
-          <p>
-            Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
-            would be impossible without nerfies since it would require going through a wall.
-          </p>
-          <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/dollyzoom-stacked.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-      </div>
-      <!--/ Visual Effects. -->
-
-      <!-- Matting. -->
-      <div class="column">
-        <h2 class="title is-3">Matting</h2>
-        <div class="columns is-centered">
-          <div class="column content">
-            <p>
-              As a byproduct of our method, we can also solve the matting problem by ignoring
-              samples that fall outside of a bounding box during rendering.
-            </p>
-            <video id="matting-video" controls playsinline height="100%">
-              <source src="./static/videos/matting.mp4"
-                      type="video/mp4">
-            </video>
-          </div>
-
-        </div>
-      </div>
-    </div>
-    <!--/ Matting. -->
-
-    <!-- Animation. -->
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Animation</h2>
-
-        <!-- Interpolating. -->
-        <h3 class="title is-4">Interpolating states</h3>
+        <h2 class="title is-3">Schedule</h2>
         <div class="content has-text-justified">
-          <p>
-            We can also animate the scene by interpolating the deformation latent codes of two input
-            frames. Use the slider here to linearly interpolate between the left frame and the right
-            frame.
-          </p>
+          <p><strong>July 27, 2025 - Hall B</strong></p>
+          <p><ul>
+            <li><strong>2:00pm:</strong> How do we <strong>evaluate</strong> data quality? (15 minutes)</li>
+            <li><strong>2:20pm:</strong> How do we <strong>create</strong> high-quality synthetic data? (35 minutes + Q&A)</li>
+            <li><strong>3:05pm:</strong> How do we <strong>use</strong> synthetic data (Pt 1)? (25 minutes)</li>
+            <li><strong>3:30pm:</strong> 30 minute break</li>
+            <li><strong>4:00pm:</strong> How do we <strong>use</strong> synthetic data (Pt 2)? (20 minutes + Q&A)</li>
+            <li><strong>4:25pm:</strong> Scenario-specific <strong>applications</strong> (35 minutes + Q&A)</li>
+            <li><strong>5:00pm:</strong> Limitations and open questions (25 minutes + Q&A)</li>
+            <li><strong>5:30pm:</strong> End</li>
+          </ul></p>
         </div>
-        <div class="columns is-vcentered interpolation-panel">
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_start.jpg"
-                 class="interpolation-image"
-                 alt="Interpolate start reference image."/>
-            <p>Start Frame</p>
-          </div>
-          <div class="column interpolation-video-column">
-            <div id="interpolation-image-wrapper">
-              Loading...
-            </div>
-            <input class="slider is-fullwidth is-large is-info"
-                   id="interpolation-slider"
-                   step="1" min="0" max="100" value="0" type="range">
-          </div>
-          <div class="column is-3 has-text-centered">
-            <img src="./static/images/interpolate_end.jpg"
-                 class="interpolation-image"
-                 alt="Interpolation end reference image."/>
-            <p class="is-bold">End Frame</p>
-          </div>
-        </div>
-        <br/>
-        <!--/ Interpolating. -->
-
-        <!-- Re-rendering. -->
-        <h3 class="title is-4">Re-rendering the input video</h3>
-        <div class="content has-text-justified">
-          <p>
-            Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
-            viewpoint such as a stabilized camera by playing back the training deformations.
-          </p>
-        </div>
-        <div class="content has-text-centered">
-          <video id="replay-video"
-                 controls
-                 muted
-                 preload
-                 playsinline
-                 width="75%">
-            <source src="./static/videos/replay.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <!--/ Re-rendering. -->
-
       </div>
     </div>
-    <!--/ Animation. -->
-
 
     <!-- Concurrent Work. -->
     <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Related Links</h2>
-
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Bibliography</h2>
         <div class="content has-text-justified">
           <p>
-            There's a lot of excellent work that was introduced around the same time as ours.
+    The papers referenced in the tutorial can be found below.
           </p>
-          <p>
-            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
-          </p>
-          <p>
-            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
-            both use deformation fields to model non-rigid scenes.
-          </p>
-          <p>
-            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
-          </p>
-          <p>
-            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
-          </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/1503.02531" target="_blank">Distilling the Knowledge in a Neural Network</a></strong><br>
+              Hinton et al., 2015
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/1511.06709" target="_blank">Improving Neural Machine Translation Models with Monolingual Data</a></strong><br>
+              Sennrich et al., 2016
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/1606.07947" target="_blank">Sequence-Level Knowledge Distillation</a></strong><br>
+              Kim & Rush, 2016
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/1811.07871" target="_blank">Scalable agent alignment via reward modeling: a research direction</a></strong><br>
+              Leike et al., 2018
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2006.10413" target="_blank">Are Pretrained Language Models Symbolic Reasoners Over Knowledge?</a></strong><br>
+              Kassner et al., 2020
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2004.10964" target="_blank">Don't Stop Pretraining: Adapt Language Models to Domains and Tasks</a></strong><br>
+              Gururangan et al., 2020
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2104.07540" target="_blank">Generating Datasets with Pretrained Language Models</a></strong><br>
+              Schick & Schütze, 2021
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2111.06467" target="_blank">SynthBio: A Case Study in Faster Curation of Text Datasets</a></strong><br>
+              Yuan et al., 2021
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2212.08073" target="_blank">Constitutional AI: Harmlessness from AI Feedback</a></strong><br>
+              Bai et al., 2022
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2202.03286" target="_blank">Red Teaming Language Models with Language Models</a></strong><br>
+              Perez et al., 2022
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2212.10560" target="_blank">Self-Instruct: Aligning Language Models with Self-Generated Instructions</a></strong><br>
+              Wang et al., 2022
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2203.14465" target="_blank">STaR: Bootstrapping Reasoning With Reasoning</a></strong><br>
+              Zelikman et al., 2022
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2212.09689" target="_blank">Unnatural Instructions: Tuning Language Models with (Almost) No Human Labor</a></strong><br>
+              Honovich et al., 2022
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2201.05955" target="_blank">WANLI: Worker and AI Collaboration for Natural Language Inference Dataset Creation</a></strong><br>
+              Liu et al., 2022
+            </p>
+            <p>
+              <strong><a href="https://crfm.stanford.edu/2023/03/13/alpaca.html" target="_blank">Alpaca: A Strong, Replicable Instruction-Following Model</a></strong><br>
+              Taori et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2304.08460" target="_blank">LongForm: Effective Instruction Tuning with Reverse Instructions</a></strong><br>
+              Köksal et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2306.02707" target="_blank">Orca: Progressive Learning from Complex Explanation Traces of GPT-4</a></strong><br>
+              Mukherjee et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2310.08491" target="_blank">Prometheus: Inducing Fine-grained Evaluation Capability in Language Models</a></strong><br>
+              Kim et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2308.12261" target="_blank">Prompt2Model: Generating Deployable Models from Natural Language Instructions</a></strong><br>
+              Viswanathan et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2304.06767" target="_blank">RAFT: Reward rAnked FineTuning for Generative Foundation Model Alignment</a></strong><br>
+              Dong et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2308.06259" target="_blank">Self-Alignment with Instruction Backtranslation</a></strong><br>
+              Li et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2303.17651" target="_blank">Self-Refine: Iterative Refinement with Self-Feedback</a></strong><br>
+              Madaan et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2212.10465" target="_blank">SODA: Million-scale Dialogue Distillation with Social Commonsense Contextualization</a></strong><br>
+              Kim et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2305.15717" target="_blank">The False Promise of Imitating Proprietary LLMs</a></strong><br>
+              Gudibande et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2306.11644" target="_blank">Textbooks Are All You Need</a></strong><br>
+              Gunasekar et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2310.01377" target="_blank">UltraFeedback: Boosting Language Models with Scaled AI Feedback</a></strong><br>
+              Cui et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2304.12244" target="_blank">WizardLM: Empowering Large Pre-trained Language Models to Follow Complex Instructions</a></strong><br>
+              Xu et al., 2023
+            </p>
+            <p>
+              <strong><a href="https://www.nature.com/articles/s41586-024-07566-y" target="_blank">AI models collapse when trained on recursively generated data</a></strong><br>
+              Shumailov et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2404.14361" target="_blank">Better Synthetic Data by Retrieving and Transforming Existing Datasets</a></strong><br>
+              Gandhi et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2502.19249" target="_blank">Between Circuits and Chomsky: Pre-pretraining on Formal Languages Imparts Linguistic Biases</a></strong><br>
+              Hu et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2507.18624" target="_blank">Checklists Are Better Than Reward Models For Aligning Language Models</a></strong><br>
+              Viswanathan et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2412.03679" target="_blank">Evaluating Language Models as Synthetic Data Generators</a></strong><br>
+              Kim et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2403.13787" target="_blank">Evaluating Reward Models for Language Modeling</a></strong><br>
+              Lambert et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2410.19133" target="_blank">Hybrid Preferences: Learning to Route Instances for Human vs. AI Feedback</a></strong><br>
+              Miranda et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2405.03548" target="_blank">MAmmoTH2: Scaling Instructions from the Web</a></strong><br>
+              Yue et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2401.16380" target="_blank">Rephrasing the Web: A Recipe for Compute and Data-Efficient Language Modeling</a></strong><br>
+              Maini et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2407.12874" target="_blank">SELF-GUIDE: Better Task-Specific Instruction Following via Self-Synthetic Finetuning</a></strong><br>
+              Zhao et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2409.07431" target="_blank">Synthetic continued pretraining</a></strong><br>
+              Yang et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2409.02098" target="_blank">Synthetic Dataset Generation Through Corpus Retrieval and Augmentation</a></strong><br>
+              Ziegler et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2410.06554" target="_blank">The Accuracy Paradox in RLHF: When Better Reward Models Don't Yield Better Language Models</a></strong><br>
+              Chen et al., 2024
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2503.01067" target="_blank">All Roads Lead to Likelihood: The Value of Reinforcement Learning in Fine-Tuning</a></strong><br>
+              Swamy et al., 2025
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2501.12948" target="_blank">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL</a></strong><br>
+              Deepseek-AI, 2025
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2505.20161" target="_blank">Prismatic Synthesis: Gradient-based Data Diversification Boosts Generalization in LLM Reasoning</a></strong><br>
+              Jung et al., 2025
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2507.07229" target="_blank">SynthTextEval: Synthetic Text Data Generation and Evaluation for High-Stakes Domains</a></strong><br>
+              Ramesh et al., 2025
+            </p>
+            <p>
+              <strong><a href="https://arxiv.org/abs/2503.15477" target="_blank">What Makes a Reward Model a Good Teacher? An Optimization Perspective</a></strong><br>
+              Razin et al., 2025
+            </p>
+
         </div>
+      </div>
       </div>
     </div>
     <!--/ Concurrent Work. -->
@@ -444,11 +411,15 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{park2021nerfies,
-  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
-  title     = {Nerfies: Deformable Neural Radiance Fields},
-  journal   = {ICCV},
-  year      = {2021},
+    <pre><code>@inproceedings{synth-data-tutorial,
+    title = "Synthetic Data in the Era of Large Language Models",
+    author = "Viswanathan, Vijay  and
+      Yue, Xiang  and
+      Liu, Alisa  and
+      Wang, Yizhong  and
+      Neubig, Graham",
+    booktitle = "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 5: Tutorial Abstracts)",
+    publisher = "Association for Computational Linguistics",
 }</code></pre>
   </div>
 </section>
@@ -469,16 +440,8 @@
       <div class="column is-8">
         <div class="content">
           <p>
-            This website is licensed under a <a rel="license"
-                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-          <p>
-            This means you are free to borrow the <a
-              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
-            we just ask that you link back to this page in the footer.
-            Please remember to remove the analytics code included in the header of the website which
-            you do not want on your website.
+            
+            This website template is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
           </p>
         </div>
       </div>
