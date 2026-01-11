@@ -34,12 +34,12 @@ $(document).ready(function() {
 			slidesToShow: 3,
 			loop: true,
 			infinite: true,
-			autoplay: false,
+			autoplay: true,
 			autoplaySpeed: 3000,
     }
 
-		// Initialize all div with carousel class
-    var carousels = bulmaCarousel.attach('.carousel', options);
+		// Initialize all div with carousel class (비교 탭 캐러셀은 index.html에서 별도 관리)
+    var carousels = bulmaCarousel.attach('.results-carousel', options);
 
     // Loop on each carousel initialized
     for(var i = 0; i < carousels.length; i++) {

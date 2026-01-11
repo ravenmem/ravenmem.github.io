@@ -23,6 +23,12 @@ body {
   padding-bottom: 3rem;
 }
 
+/* BENv2 Results Comparison section */
+.hero.is-light .hero-body {
+  padding-top: 2rem;
+  padding-bottom: 0;
+}
+
 .teaser {
   font-family: 'Google Sans', sans-serif;
 }
@@ -123,6 +129,64 @@ body {
   font-size: 0;
 }
 
+/* Carousel styling */
+.carousel {
+  padding-bottom: 10px; /* pagination dots를 위한 공간 */
+  position: relative;
+  overflow: visible;
+}
+
+.carousel .slider {
+  overflow: hidden;
+}
+
+.carousel .slider-container {
+  position: relative;
+}
+
+.carousel .item {
+  margin: 0 5px;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 5px;
+}
+
+/* Carousel navigation buttons */
+.carousel .slider-navigation-previous,
+.carousel .slider-navigation-next {
+  top: 50% !important;
+  transform: translateY(-20%) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 50% !important;
+  width: 44px !important;
+  height: 44px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+  z-index: 100 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel .slider-navigation-previous {
+  left: 15px !important;
+}
+
+.carousel .slider-navigation-next {
+  right: 15px !important;
+}
+
+.carousel .slider-navigation-previous::before,
+.carousel .slider-navigation-next::before {
+  border-color: #333 !important;
+  border-width: 3px 3px 0 0 !important;
+}
+
+.carousel .slider-pagination {
+  bottom: 5px;
+  z-index: 99999 !important;
+  position: relative !important;
+}
+
 .results-carousel video {
   margin: 0;
 }
@@ -154,4 +218,168 @@ body {
 }
 #interpolation-image-wrapper img {
   border-radius: 5px;
+}
+
+
+
+.comparison-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: transparent;
+  cursor: grab;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 
+              0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  margin-bottom: 12px;
+}
+
+.comparison-container:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), 
+              0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.comparison-container p {
+  margin: 0;
+  padding: 5px 0;
+  background-color: #f5f5f5;
+}
+
+.comparison-container:active,
+.comparison-container.active {
+  cursor: grabbing;
+}
+
+.comparison-container img-comparison-slider {
+  width: 100%;
+  max-height: 320px;
+  margin: 0 auto;
+  transition: filter 0.5s ease;
+  display: block;
+  cursor: inherit;
+  --divider-width: 3px;
+  --divider-color: rgba(255, 255, 255, 0.9);
+  --default-handle-width: 50px;
+  --default-handle-color: rgba(255, 255, 255, 0.9);
+  --default-handle-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+
+.comparison-container img-comparison-slider img {
+  max-height: 320px;
+  object-fit: contain;
+}
+
+.comparison-container img-comparison-slider:focus {
+  outline: none;
+}
+
+img-comparison-slider img {
+  outline: none;
+}
+
+img-comparison-slider:focus,
+img-comparison-slider *:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Dimming image on hover */
+.comparison-container:hover img-comparison-slider {
+  filter: brightness(0.75);
+}
+
+/* 슬라이더 조작 중일 때 hover 효과 비활성화 */
+.comparison-container.active img-comparison-slider,
+.comparison-container.active:hover img-comparison-slider {
+  filter: brightness(1) !important;
+}
+
+.comparison-container.active .hover-label,
+.comparison-container.active:hover .hover-label {
+  opacity: 0 !important;
+}
+
+/* 2. Hover Labels (Input SAR vs OSCAR) */
+.hover-label {
+  position: absolute;
+  top: 15px;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none; /* Allows mouse to interact with slider handle */
+  z-index: 10;
+}
+
+.label-left { left: 10px; }
+.label-right { right: 10px; }
+
+.comparison-container:hover .hover-label {
+  opacity: 1;
+}
+
+/* 3. Carousel Item Sizing */
+.results-carousel .item {
+  margin: 10px;
+  /* Adjust this to control how many items show at once */
+}
+
+/* Tab Styles */
+.tabs.is-boxed li.is-active a {
+  background-color: #fff !important;
+  border-color: #dbdbdb;
+  border-bottom-color: transparent !important;
+  color: #363636 !important;
+}
+
+.tabs.is-boxed a {
+  border-radius: 6px 6px 0 0;
+  transition: all 0.3s ease;
+  background-color: #f5f5f5;
+  color: #4a4a4a;
+}
+
+.tabs.is-boxed a:hover {
+  background-color: #e8e8e8;
+  color: #363636;
+}
+
+.tab-content,
+.sen12ms-tab-content {
+  display: none;
+  padding: 0 0 0 0;
+  animation: fadeIn 0.4s ease;
+  overflow: visible;
+}
+
+.tab-content.is-active,
+.sen12ms-tab-content.is-active {
+  display: block;
+  overflow: visible;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#comparison-tabs ul {
+  border-bottom-color: #dbdbdb;
+}
+
+#comparison-tabs li a {
+  font-weight: 600;
+  color: #363636;
 }
