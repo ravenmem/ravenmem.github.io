@@ -25,7 +25,7 @@
         <img src="https://img.shields.io/badge/🏠-Project%20Page-blue">
         </a>
         <a href="https://arxiv.org/abs/2601.06835" target='_blank'>
-        <img src="https://img.shields.io/badge/arXiv-2411.10788-b31b1b.svg">
+        <img src="https://img.shields.io/badge/arXiv-2601.06835-b31b1b.svg">
         </a>
         <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/eunoiahyunseo/OSCAR">
     </h4>
@@ -43,6 +43,10 @@ This repository is the official PyTorch implementation of "OSCAR: Optical-aware 
 ## 📧 News
 - **⚠ The code will be released later**
 - **January 11, 2026:** This repository is created
+
+## 📌 TODO
+- [ ] Optical-Aware Encoder
+- [ ] Semantic-Grounded ControlNet
 
 ---
 

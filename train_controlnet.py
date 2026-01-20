@@ -45,10 +45,10 @@ from peft import LoraConfig, get_peft_model
 from utils.transforms import make_transform
 from utils.visualization import tensor_to_pil
 from utils.prompts import (
-    BEN_V2_CLASS_NAMES, SEASON_MAP, SD_V2_CLASS_PROMPTS,
+    BEN_V2_CLASS_NAMES, SEASON_MAP, SD_V2_CLASS_PROMPTS, LCCS_LU_CLASS_PROMPTS_V2,
     get_season_from_month, metadata_normalize, logits_to_prompt
 )
-from utils.dataloaders import ben_collate_fn
+from utils.dataloaders import ben_collate_fn, sen12ms_collate_fn
 from utils.models import (
     ViTKDDistillationModel,
     import_model_class_from_model_name_or_path,
@@ -56,6 +56,10 @@ from utils.models import (
 )
 from utils.pipeline import load_seesr_pipeline, save_model_card
 from utils.validation import run_validation
+
+# SEN12MS imports
+from torch.utils.data.distributed import DistributedSampler
+from dataloaders.sen12ms_dataloader import SEN12MSDataset
 
 
 if is_wandb_available():
@@ -68,6 +72,14 @@ logger = get_logger(__name__)
 
 def parse_args(input_args=None):
     parser = argparse.ArgumentParser(description="Simple example of a ControlNet training script.")
+    # Dataset selection
+    parser.add_argument("--dataset", type=str, choices=["benv2", "sen12ms"], default="benv2",
+        help="Dataset to use: 'benv2' for BigEarthNet v2, 'sen12ms' for SEN12MS")
+    parser.add_argument("--sen12ms_root", type=str, default="./sen12ms",
+        help="Root directory for SEN12MS dataset")
+    parser.add_argument("--sen12ms_dino_checkpoint", type=str,
+        default="/mnt/e/checkpoint_sen12ms/stage1_sar/checkpoint_stage1_epoch293.pth",
+        help="DINOv3 checkpoint trained on SEN12MS (11 classes)")
     parser.add_argument("--sen12_root", type=str, default="/mnt/f/sen12_split", help="Root directory for SEN12 dataset")
     parser.add_argument("--lpips_weight", type=float, default=0.1, help="Weight of LPIPS loss")
     parser.add_argument(
@@ -123,7 +135,7 @@ def parse_args(input_args=None):
     parser.add_argument(
         "--resolution",
         type=int,
-        default=512,
+        default=256,
         help=(
             "The resolution for input images, all the images in the train/validation dataset will be resized to this"
             " resolution"
@@ -214,7 +226,7 @@ def parse_args(input_args=None):
     parser.add_argument(
         "--dataloader_num_workers",
         type=int,
-        default=0,
+        default=8,
         help=(
             "Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process."
         ),
@@ -388,7 +400,6 @@ def parse_args(input_args=None):
 
     parser.add_argument("--root_folders",  type=str , default='' )
     parser.add_argument("--null_text_ratio", type=float, default=0.5)
-    parser.add_argument("--ram_ft_path", type=str, default=None)
     parser.add_argument('--trainable_modules', nargs='*', type=str, default=["image_attentions"])
 
 
@@ -543,16 +554,30 @@ text_encoder = text_encoder_cls.from_pretrained(
 vae = AutoencoderKL.from_pretrained(args.pretrained_model_name_or_path, subfolder="vae", revision=args.revision)
 
 
-################# DINOv3 Linear Classifier with LoRA #################
+################# Dataset-specific Configuration #################
 
 RESIZE_SIZE = 256 if args.merge_patch else 128
+
+# Set dataset-specific number of classes and prompts
+if args.dataset == "sen12ms":
+    NUM_CLASSES = 11
+    CLASS_PROMPTS = LCCS_LU_CLASS_PROMPTS_V2
+    DINO_CHECKPOINT = args.sen12ms_dino_checkpoint
+    logger.info(f"Using SEN12MS dataset configuration: {NUM_CLASSES} classes")
+else:  # benv2
+    NUM_CLASSES = args.num_classes  # default 19
+    CLASS_PROMPTS = SD_V2_CLASS_PROMPTS
+    DINO_CHECKPOINT = args.dino_checkpoint
+    logger.info(f"Using BENv2 dataset configuration: {NUM_CLASSES} classes")
+
+################# DINOv3 Linear Classifier with LoRA #################
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     backbone = torch.hub.load(args.dino_repo_path, 'dinov3_vitl16', source='local', weights=args.dino_weights)
 
 dino_hidden_dim = backbone.embed_dim
-classifier_model = ViTKDDistillationModel(backbone, num_classes=args.num_classes, layers=args.layers_to_distill)
+classifier_model = ViTKDDistillationModel(backbone, num_classes=NUM_CLASSES, layers=args.layers_to_distill)
 
 lora_config = LoraConfig(
     r=args.lora_r,
@@ -562,7 +587,7 @@ lora_config = LoraConfig(
     bias="none"
 )
 classifier_model = get_peft_model(classifier_model, lora_config)
-checkpoint = torch.load(args.dino_checkpoint, map_location='cpu')
+checkpoint = torch.load(DINO_CHECKPOINT, map_location='cpu')
 classifier_model.load_state_dict(checkpoint['model_state_dict'], strict=False)
 
 classifier_model.to(accelerator.device)
@@ -710,68 +735,106 @@ optimizer = optimizer_class(
     eps=args.adam_epsilon,
 )
 
-datapath = {
-    "images_lmdb": args.images_lmdb,
-    "metadata_parquet": args.metadata_parquet,
-    "metadata_snow_cloud_parquet": args.metadata_snow_cloud_parquet,
-}
+################# Dataset and DataLoader Setup #################
 
-transform = {
-    "opt": make_transform(resize_size=RESIZE_SIZE, data_type="opt", is_train=True, calc_norm=True, train_datatype="opt"),
-    "sar": make_transform(
-        resize_size=RESIZE_SIZE,
-        data_type="sar",
-        is_train=True,
-        calc_norm=True,
-        train_datatype="sar"
+if args.dataset == "sen12ms":
+    # SEN12MS dataset configuration
+    dataset_name = "sen12ms"
+    transform = {
+        "opt": make_transform(resize_size=RESIZE_SIZE, data_type="opt", is_train=True, calc_norm=True, train_datatype="opt", dataset="sen12ms"),
+        "sar": make_transform(resize_size=RESIZE_SIZE, data_type="sar", is_train=True, calc_norm=True, train_datatype="sar", dataset="sen12ms")
+    }
+    transform_val = {
+        "opt": make_transform(resize_size=RESIZE_SIZE, data_type="opt", is_train=False, calc_norm=True, train_datatype="opt", dataset="sen12ms"),
+        "sar": make_transform(resize_size=RESIZE_SIZE, data_type="sar", is_train=False, calc_norm=True, train_datatype="sar", dataset="sen12ms")
+    }
+
+    train_dataset = SEN12MSDataset(root_dir=args.sen12ms_root, subset="train", seed=args.seed or 42, transform=transform)
+    val_dataset = SEN12MSDataset(root_dir=args.sen12ms_root, subset="test", seed=args.seed or 42, transform=transform_val)
+
+    # Use DistributedSampler for SEN12MS
+    train_sampler = DistributedSampler(train_dataset, shuffle=True)
+    val_sampler = DistributedSampler(val_dataset, shuffle=False)
+
+    train_dataloader = DataLoader(
+        train_dataset,
+        batch_size=args.train_batch_size,
+        shuffle=False,  # Sampler handles shuffling
+        num_workers=args.dataloader_num_workers,
+        pin_memory=True,
+        sampler=train_sampler,
+        collate_fn=sen12ms_collate_fn,
     )
-}
 
-transform_val = {
-    "opt": make_transform(resize_size=RESIZE_SIZE, data_type="opt", is_train=False, calc_norm=True, train_datatype="opt"),
-    "sar": make_transform(
-        resize_size=RESIZE_SIZE,
-        data_type="sar",
-        is_train=False,
-        calc_norm=True,
-        train_datatype="sar"
+    validation_dataloader = DataLoader(
+        val_dataset,
+        batch_size=args.train_batch_size,
+        shuffle=False,
+        num_workers=args.dataloader_num_workers,
+        pin_memory=True,
+        sampler=val_sampler,
+        collate_fn=sen12ms_collate_fn,
     )
-}
 
-train_dataset = BENv2_DataSet.BENv2DataSet(
-    data_dirs=datapath,
-    img_size=(12, 120, 120),
-    split='train',
-    transform=transform,
-    merge_patch=args.merge_patch,
-    return_diffsat_metadata=True
-)
+    logger.info(f"SEN12MS dataset loaded: {len(train_dataset)} train, {len(val_dataset)} val samples")
 
-val_dataset = BENv2_DataSet.BENv2DataSet(
-    data_dirs=datapath,
-    img_size=(12, 120, 120),
-    split='test',
-    transform=transform_val,
-    merge_patch=args.merge_patch,
-    return_diffsat_metadata=True
-)
+else:  # benv2
+    # BENv2 dataset configuration
+    dataset_name = "benv2"
+    datapath = {
+        "images_lmdb": args.images_lmdb,
+        "metadata_parquet": args.metadata_parquet,
+        "metadata_snow_cloud_parquet": args.metadata_snow_cloud_parquet,
+    }
 
-train_dataloader = DataLoader(train_dataset, 
-                        batch_size=args.train_batch_size, 
-                        shuffle=True, 
-                        num_workers=args.dataloader_num_workers, 
-                        pin_memory=False,
-                        prefetch_factor=4,
-                        persistent_workers=True,
-                        collate_fn=ben_collate_fn,
-                    )
+    transform = {
+        "opt": make_transform(resize_size=RESIZE_SIZE, data_type="opt", is_train=True, calc_norm=True, train_datatype="opt"),
+        "sar": make_transform(resize_size=RESIZE_SIZE, data_type="sar", is_train=True, calc_norm=True, train_datatype="sar")
+    }
+    transform_val = {
+        "opt": make_transform(resize_size=RESIZE_SIZE, data_type="opt", is_train=False, calc_norm=True, train_datatype="opt"),
+        "sar": make_transform(resize_size=RESIZE_SIZE, data_type="sar", is_train=False, calc_norm=True, train_datatype="sar")
+    }
 
-validation_dataloader = DataLoader(val_dataset,
-                        batch_size=args.train_batch_size,
-                        shuffle=False,
-                        num_workers=0,
-                        pin_memory=True,
-                        collate_fn=ben_collate_fn)
+    train_dataset = BENv2_DataSet.BENv2DataSet(
+        data_dirs=datapath,
+        img_size=(12, 120, 120),
+        split='train',
+        transform=transform,
+        merge_patch=args.merge_patch,
+        return_diffsat_metadata=True
+    )
+
+    val_dataset = BENv2_DataSet.BENv2DataSet(
+        data_dirs=datapath,
+        img_size=(12, 120, 120),
+        split='test',
+        transform=transform_val,
+        merge_patch=args.merge_patch,
+        return_diffsat_metadata=True
+    )
+
+    train_dataloader = DataLoader(
+        train_dataset,
+        batch_size=args.train_batch_size,
+        shuffle=True,
+        num_workers=args.dataloader_num_workers,
+        pin_memory=False,
+        prefetch_factor=4,
+        persistent_workers=True,
+        collate_fn=ben_collate_fn,
+    )
+
+    validation_dataloader = DataLoader(
+        val_dataset,
+        batch_size=args.train_batch_size,
+        shuffle=False,
+        num_workers=0,
+        pin_memory=True,
+        collate_fn=ben_collate_fn,
+    )
+
+    logger.info(f"BENv2 dataset loaded: {len(train_dataset)} train, {len(val_dataset)} val samples")
 
 
 
@@ -873,7 +936,10 @@ for epoch in range(first_epoch, args.num_train_epochs):
             sar_image_256 = batch["sar"].to(accelerator.device, dtype=weight_dtype)
 
             sar_classifier_cond = normalize(sar_image_256)
-            md_norm  = md_norm.to(accelerator.device)
+
+            # Handle metadata (None for SEN12MS, tensor for BENv2)
+            if md_norm is not None:
+                md_norm = md_norm.to(accelerator.device)
 
 
             opt_image_vae = opt_image_256 * 2.0 - 1.0
@@ -907,7 +973,7 @@ for epoch in range(first_epoch, args.num_train_epochs):
                 args=args,
                 is_train=True,
                 logits=logits,
-                class_names=SD_V2_CLASS_PROMPTS,
+                class_names=CLASS_PROMPTS,  # Uses dataset-specific prompts
                 seasons=seasons,
                 threshold=args.prompt_threshold,
                 max_classes=args.prompt_max_classes
@@ -1049,7 +1115,9 @@ for epoch in range(first_epoch, args.num_train_epochs):
 
                             sar_classifier_cond = normalize(sar_image_256).to(accelerator.device, dtype=weight_dtype)
 
-                            md_norm = md_norm.to(accelerator.device)
+                            # Handle metadata (None for SEN12MS, tensor for BENv2)
+                            if md_norm is not None:
+                                md_norm = md_norm.to(accelerator.device)
 
                     
                             
@@ -1072,7 +1140,7 @@ for epoch in range(first_epoch, args.num_train_epochs):
                                 args=args,
                                 is_train=False,
                                 logits=logits,
-                                class_names=SD_V2_CLASS_PROMPTS,
+                                class_names=CLASS_PROMPTS,  # Uses dataset-specific prompts
                                 seasons=seasons,
                                 threshold=args.prompt_threshold,
                                 max_classes=args.prompt_max_classes

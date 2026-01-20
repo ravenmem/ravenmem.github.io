@@ -1,14 +1,15 @@
-CUDA_VISIBLE_DEVICES="0, 1" accelerate launch train_seesr.py \
+GPUS="0,1"
+export CUDA_VISIBLE_DEVICES=$GPUS
+
+
+accelerate launch train_controlnet.py \
+--dataset sen12ms \
 --pretrained_model_name_or_path="./stable-diffusion-2-1-base/stable-diffusion-2-1-base" \
---output_dir="/mnt/e/sar2opt/output_meta_cond_no_nh_np" \
---ram_ft_path='./DAPE.pth' \
+--output_dir="/mnt/e/checkpoint_sen12ms/controlnet_retrain" \
 --mixed_precision="bf16" \
---resolution=256 \
 --learning_rate=5e-5 \
 --train_batch_size=8 \
 --gradient_accumulation_steps=4 \
---null_text_ratio=0.5 \
---dataloader_num_workers=8 \
 --checkpointing_steps=1000 \
 --max_train_steps=100000 \
 --report_to wandb \
@@ -20,5 +21,3 @@ CUDA_VISIBLE_DEVICES="0, 1" accelerate launch train_seesr.py \
 --set_grads_to_none \
 --enable_xformers_memory_efficient_attention \
 --trainable_modules "image_attentions" "conv_out_conf"
-
-
