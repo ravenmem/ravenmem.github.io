@@ -10,7 +10,7 @@
 <br>
 [Dongxu Zhang](https://dongxu-zhang.github.io/)<sup>1,*</sup>, [Yiding Sun](https://github.com/Issac-Sun)<sup>1,*</sup>, [Cheng Tan](https://chengtan9907.github.io/)<sup>3</sup>, [Wenbiao Yan](#)<sup>4</sup>, [Ning Yang](http://ningyangcasia.cn/)<sup>2,†</sup>, [Jihua Zhu](https://gr.xjtu.edu.cn/web/zhujh)<sup>1,†</sup>, [Haijun Zhang](https://scce.ustb.edu.cn/shiziduiwu/jiaoshixinxi/2018-04-13/100.html)<sup>5</sup>
 
-<sup>1</sup>Xi'an Jiaotong University, <sup>2</sup>CASIA, <sup>3</sup>Shanghai AI Laboratory, <sup>4</sup>HITSZ, <sup>5</sup>USTB
+<sup>1</sup>State Key Laboratory of Human-Machine Hybrid Augmented Intelligence, XJTU, <sup>2</sup>CASIA, <sup>3</sup>Shanghai AI Laboratory, <sup>4</sup>HITSZ, <sup>5</sup>USTB
 </div>
 
 ---
