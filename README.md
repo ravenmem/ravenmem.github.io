@@ -92,7 +92,7 @@ pip install -r requirements.txt
 
 OSCAR training consists of two main components:
 1. **Optical-Aware SAR Encoder** - DINOv3 with knowledge distillation (`dino_final.py`)
-2. **Semantic-Grounded ControlNet** - Diffusion model for SAR-to-Optical translation (`train_seesr.py`)
+2. **Semantic-Grounded ControlNet** - Diffusion model for SAR-to-Optical translation (`train_controlnet.py`)
 
 ---
 
@@ -291,8 +291,7 @@ accelerate launch train_seesr.py \
 OSCAR/
 ├── dino_final.py              # Optical-Aware SAR Encoder training
 ├── train_seesr.py             # Semantic-Grounded ControlNet training
-├── test_seesr.py              # Evaluation script for BENv2
-├── test_seesr_sen12ms.py      # Evaluation script for SEN12MS
+├── test_seesr.py              # Unified evaluation script (BENv2/SEN12MS)
 ├── sen12ms_dataloader.py      # SEN12MS dataset loader
 ├── models/
 │   ├── controlnet.py          # ControlNet architecture
@@ -305,6 +304,7 @@ OSCAR/
 │   ├── prompts.py             # Class prompts and prompt generation
 │   ├── dataloaders.py         # Dataset utilities
 │   ├── models.py              # Model utilities
+│   ├── metrics.py             # Image quality metrics (QNR, SAM, SCC, RMSE)
 │   ├── pipeline.py            # Pipeline utilities
 │   ├── validation.py          # Validation utilities
 │   └── wavelet_color_fix.py   # Post-processing color correction
@@ -324,13 +324,22 @@ OSCAR/
 
 ## 🔬 Evaluation
 
+The unified `test_seesr.py` script supports both BENv2 and SEN12MS datasets through the `--dataset` argument.
+
 ### BENv2 Dataset
 
 ```bash
-CUDA_VISIBLE_DEVICES="0,1" accelerate launch test_seesr.py \
-    --pretrained_model_path "./stable-diffusion-2-1-base/stable-diffusion-2-1-base" \
-    --seesr_model_path "./checkpoints/benv2/controlnet/checkpoint-100000" \
-    --output_dir "./output_benv2" \
+python test_seesr.py \
+    --dataset benv2 \
+    --checkpoint_dir "./checkpoints/benv2/controlnet/checkpoint-100000" \
+    --base_model_path "./stable-diffusion-2-1-base/stable-diffusion-2-1-base" \
+    --dino_weights "./dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth" \
+    --dino_checkpoint "./checkpoints/benv2/stage1_sar/checkpoint_stage1_epoch100.pth" \
+    --images_lmdb /path/to/Encoded-BigEarthNet \
+    --metadata_parquet /path/to/metadata.parquet \
+    --metadata_snow_cloud_parquet /path/to/metadata_for_patches_with_snow_cloud_or_shadow.parquet \
+    --output_dir "./validation_results/benv2" \
+    --num_samples 1000 \
     --num_inference_steps 50 \
     --guidance_scale 5.5
 ```
@@ -338,11 +347,69 @@ CUDA_VISIBLE_DEVICES="0,1" accelerate launch test_seesr.py \
 ### SEN12MS Dataset
 
 ```bash
-python test_seesr_sen12ms.py \
-    --pretrained_model_path "./stable-diffusion-2-1-base/stable-diffusion-2-1-base" \
-    --seesr_model_path "./checkpoints/sen12ms/controlnet/checkpoint-100000" \
-    --output_dir "./output_sen12ms"
+python test_seesr.py \
+    --dataset sen12ms \
+    --sen12ms_root "./sen12ms" \
+    --checkpoint_dir "./checkpoints/sen12ms/controlnet/checkpoint-100000" \
+    --base_model_path "./stable-diffusion-2-1-base/stable-diffusion-2-1-base" \
+    --dino_weights "./dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth" \
+    --dino_checkpoint "./checkpoints/sen12ms/stage1_sar/checkpoint_stage1_epoch100.pth" \
+    --output_dir "./validation_results/sen12ms" \
+    --num_samples 3000 \
+    --num_inference_steps 50 \
+    --guidance_scale 5.5
 ```
+
+### Evaluate External Generated Images
+
+Skip image generation and evaluate pre-generated images:
+
+```bash
+python test_seesr.py \
+    --dataset benv2 \
+    --external_folder "./external_generated_images" \
+    --dino_weights "./dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth" \
+    --dino_checkpoint "./checkpoints/benv2/stage1_sar/checkpoint_stage1_epoch100.pth" \
+    --output_dir "./validation_results/external"
+```
+
+### Key Arguments for `test_seesr.py`
+
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `--dataset` | Dataset to use: `benv2` or `sen12ms` | `benv2` |
+| `--checkpoint_dir` | Path to trained ControlNet checkpoint | Required |
+| `--base_model_path` | Path to Stable Diffusion 2.1 base | Required |
+| `--dino_weights` | Path to DINOv3 pretrained weights | Required |
+| `--dino_checkpoint` | Path to DINOv3 classifier checkpoint | Required |
+| `--output_dir` | Output directory for results | `./validation_results` |
+| `--num_samples` | Number of samples to evaluate | 1000 |
+| `--batch_size` | Evaluation batch size | 20 |
+| `--external_folder` | Path to external generated images (skip generation) | None |
+| `--num_inference_steps` | Diffusion inference steps | 50 |
+| `--guidance_scale` | Classifier-free guidance scale | 5.5 |
+| `--mixed_precision` | Mixed precision mode: `no`, `fp16`, `bf16` | `bf16` |
+
+### Evaluation Metrics
+
+The evaluation script computes the following metrics:
+
+**Perceptual Metrics:**
+- PSNR (Peak Signal-to-Noise Ratio)
+- SSIM (Structural Similarity Index)
+- LPIPS (Learned Perceptual Image Patch Similarity)
+- DISTS (Deep Image Structure and Texture Similarity)
+
+**Remote Sensing Metrics:**
+- QNR (Quality with No Reference)
+- SAM (Spectral Angle Mapper)
+- SCC (Spatial Correlation Coefficient)
+- RMSE (Root Mean Square Error)
+
+**Generative Metrics:**
+- FID (Fréchet Inception Distance)
+- KID (Kernel Inception Distance)
+- ISC (Inception Score)
 
 ---
 
