@@ -416,14 +416,6 @@ The evaluation script computes the following metrics:
 ## 📈 Results
 
 Please visit our [project page](https://eunoiahyunseo.github.io/OSCAR/) for more experimental results.
-
-### Quantitative Results
-
-| Method | Dataset | PSNR ↑ | SSIM ↑ | LPIPS ↓ | FID ↓ |
-|--------|---------|--------|--------|---------|-------|
-| OSCAR | BENv2 | - | - | - | - |
-| OSCAR | SEN12MS | - | - | - | - |
-
 ---
 
 ## 📝 Citation
