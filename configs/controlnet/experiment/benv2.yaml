@@ -1,0 +1,19 @@
+# @package _global_
+# ControlNet training configuration for BigEarthNet-v2 dataset
+
+defaults:
+  - /controlnet/default
+
+experiment:
+  name: "controlnet_benv2_sar2opt"
+  output_dir: "./checkpoints/controlnet/benv2"
+
+data:
+  dataset: "benv2"
+
+model:
+  dino:
+    checkpoint: "./checkpoints/benv2/stage1_sar/last.ckpt"
+
+  classifier:
+    num_classes: 19

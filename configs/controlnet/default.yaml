@@ -1,0 +1,175 @@
+# @package _global_
+# Default configuration for ControlNet SAR-to-Optical Training
+
+# ========================
+# EXPERIMENT SETTINGS
+# ========================
+experiment:
+  name: "controlnet_sar2opt"
+  seed: 42
+  output_dir: "./checkpoints/controlnet"
+
+# ========================
+# MODEL CONFIGURATION
+# ========================
+model:
+  # Pretrained Stable Diffusion
+  pretrained_model_path: "./stable-diffusion-2-1-base"
+  controlnet_model_path: null  # Path to resume ControlNet training
+  unet_model_path: null  # Path to resume UNet training
+  revision: null
+
+  # DINO encoder (from Stage 1 Lightning checkpoint)
+  dino:
+    repo_path: "/home/hyunseo/workspace/dinov3"
+    checkpoint: "./checkpoints/benv2/stage1_sar/last.ckpt"  # Stage 1 Lightning checkpoint
+    weights: "/home/hyunseo/workspace/sar2opt/SAR2OPT/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth"
+    embed_dim: 1024  # ViT-L embed dimension
+    layers_to_extract: [14, 17, 20, 23]
+
+    # LoRA config (must match Stage 1 training)
+    lora:
+      rank: 8
+      alpha: 16
+      dropout: 0.05
+      target_modules: ["attn.qkv", "attn.proj"]
+      bias: "none"
+
+  # ControlNet architecture
+  controlnet:
+    conditioning_channels: 3
+
+  # Classifier for prompt generation
+  classifier:
+    num_classes: 19  # BENv2: 19, SEN12MS: 11
+
+# ========================
+# DATA CONFIGURATION
+# ========================
+data:
+  dataset: "benv2"  # benv2 or sen12ms
+  resolution: 256
+  merge_patch: true
+
+  benv2:
+    images_lmdb: "/home/hyunseo/workspace/rico-hdl/Encoded-BigEarthNet"
+    metadata_parquet: "/home/hyunseo/workspace/sar2opt/dataset/BigEarthNetv2/metadata.parquet"
+    metadata_snow_cloud_parquet: "/home/hyunseo/workspace/sar2opt/dataset/BigEarthNetv2/metadata_for_patches_with_snow_cloud_or_shadow.parquet"
+    img_size: [12, 120, 120]
+
+  sen12ms:
+    root_dir: "./sen12ms"
+    dino_checkpoint: null  # SEN12MS-specific DINO checkpoint (11 classes)
+
+  preprocessing:
+    norm_mean: [0.430, 0.411, 0.296]
+    norm_std: [0.213, 0.156, 0.143]
+
+  dataloader:
+    batch_size: 8
+    num_workers: 8
+    pin_memory: true
+    prefetch_factor: 4
+    persistent_workers: true
+
+# ========================
+# TRAINING CONFIGURATION
+# ========================
+training:
+  num_epochs: 1000
+  max_train_steps: null  # If set, overrides num_epochs
+  gradient_accumulation_steps: 4
+
+  # Explicitly define which modules to train
+  trainable_modules: ["controlnet"]  # Options: controlnet, unet, text_encoder, image_attentions
+
+  optimizer:
+    type: "adamw"
+    lr: 5.0e-5
+    weight_decay: 0.01
+    betas: [0.9, 0.999]
+    epsilon: 1.0e-8
+    use_8bit: false
+    scale_lr: false
+
+  scheduler:
+    type: "constant"  # constant, linear, cosine, cosine_with_restarts, polynomial, constant_with_warmup
+    warmup_steps: 500
+    num_cycles: 1
+    power: 1.0
+
+  gradient_checkpointing: false
+  max_grad_norm: 1.0
+  set_grads_to_none: false
+  allow_tf32: false
+  enable_xformers: false
+
+# ========================
+# LOSS CONFIGURATION
+# ========================
+losses:
+  loss_beta: 1.0  # Beta for uncertainty weighting (confidence-weighted loss)
+  lpips_weight: 0.1  # Weight of LPIPS loss (0 to disable)
+  metadata_dropout: 0.1  # Metadata dropout probability
+
+# ========================
+# PROMPT CONFIGURATION
+# ========================
+prompts:
+  threshold: 0.7  # Threshold for class probability in prompt generation
+  max_classes: 2  # Maximum number of classes in prompt
+  fixed_prompt: ""  # Fixed prompt override (empty string to disable)
+  null_text_ratio: 0.5  # Proportion of prompts to replace with empty strings
+  negative_prompt: "low quality, worst quality, blurry, noisy, jpeg artifacts, speckle, speckle noise, grainy, monochrome, grayscale, dark"
+
+# ========================
+# VALIDATION CONFIGURATION
+# ========================
+validation:
+  interval_steps: 500  # Run validation every N steps (also checkpointing interval)
+  num_samples: 4  # Number of validation images to generate
+  max_batches: 5  # Maximum batches for validation
+  inference_steps: 100  # Denoising steps during validation
+  guidance_scale: 5.5  # Classifier-free guidance scale
+  seed: 500  # Random seed for reproducible validation
+
+# ========================
+# LOGGING & CHECKPOINTING
+# ========================
+logging:
+  wandb:
+    project: "sar2opt-controlnet"
+    enabled: true
+    resume_id: null  # Set to previous run ID for seamless WandB resume
+
+  report_to: "wandb"  # tensorboard, wandb, or all
+  log_every_n_steps: 1
+
+checkpoint:
+  save_every_n_steps: 500
+  checkpoints_total_limit: null  # Max checkpoints to keep (null = unlimited)
+  resume_path: null  # Path to checkpoint for resuming (or "latest")
+
+# ========================
+# DEBUG OPTIONS
+# ========================
+debug:
+  fast_dev_run: false
+  max_train_samples: null  # Truncate training data for debugging
+
+# ========================
+# TRAINER (PyTorch Lightning)
+# ========================
+trainer:
+  accelerator: "gpu"
+  devices: "auto"
+  strategy: "ddp"
+  precision: "bf16-mixed"  # no, fp16, bf16, bf16-mixed
+  max_epochs: ${training.num_epochs}
+  accumulate_grad_batches: ${training.gradient_accumulation_steps}
+  gradient_clip_val: ${training.max_grad_norm}
+  log_every_n_steps: ${logging.log_every_n_steps}
+  val_check_interval: ${validation.interval_steps}
+  enable_checkpointing: true
+  enable_progress_bar: true
+  deterministic: false
