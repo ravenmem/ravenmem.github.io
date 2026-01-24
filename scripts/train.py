@@ -4,10 +4,10 @@ Main training script for DINO Knowledge Distillation with PyTorch Lightning and 
 
 Usage:
     # Stage 0: Train optical baseline on BENv2
-    python scripts/train.py experiment=stage0_benv2
+    python scripts/train.py +experiment=stage0_benv2
 
     # Stage 1: Train SAR with KD on BENv2
-    python scripts/train.py experiment=stage1_benv2
+    python scripts/train.py +experiment=stage1_benv2
 
     # Override config values
     python scripts/train.py experiment=stage0_benv2 training.optimizer.lr_base=5e-5
@@ -45,6 +45,7 @@ def validate_config(cfg: DictConfig):
     """Validate configuration before training."""
     # Stage validation
     if cfg.experiment.stage == 0:
+        
         if cfg.distillation.teacher_checkpoint is not None:
             raise ValueError("Stage 0 (optical baseline) should not have teacher_checkpoint")
         if cfg.data.data_type != "opt":
@@ -68,7 +69,7 @@ def main(cfg: DictConfig):
     print("=" * 60)
     print("Configuration:")
     print("=" * 60)
-    print(OmegaConf.to_yaml(cfg))
+    print(OmegaConf.to_yaml(cfg, resolve=True))
     print("=" * 60)
 
     # Validate config
@@ -101,7 +102,7 @@ def main(cfg: DictConfig):
         )
 
     # Setup callbacks
-    callbacks = [
+    callbacks = [   
         ModelCheckpoint(
             dirpath=cfg.experiment.output_dir,
             filename="checkpoint-{epoch:02d}-{val/APM:.4f}",
@@ -129,7 +130,8 @@ def main(cfg: DictConfig):
         "accumulate_grad_batches": cfg.trainer.accumulate_grad_batches,
         "gradient_clip_val": cfg.trainer.gradient_clip_val,
         "log_every_n_steps": cfg.trainer.log_every_n_steps,
-        "val_check_interval": cfg.trainer.val_check_interval,
+        "val_check_interval": cfg.trainer.val_check_interval ,
+        "check_val_every_n_epoch": cfg.trainer.check_val_every_n_epoch,
         "enable_checkpointing": cfg.trainer.enable_checkpointing,
         "enable_progress_bar": cfg.trainer.enable_progress_bar,
         "deterministic": cfg.trainer.deterministic,

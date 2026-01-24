@@ -70,7 +70,7 @@ class ControlNetModule(pl.LightningModule):
         )
 
         # Manual optimization for multiple parameter groups
-        self.automatic_optimization = False
+        # self.automatic_optimization = False
 
     def _load_pretrained_models(self):
         """Load pretrained Stable Diffusion components."""
@@ -251,6 +251,12 @@ class ControlNetModule(pl.LightningModule):
                     for params in module.parameters():
                         params.requires_grad = True
 
+        # Confidence output layer (subset of UNet)
+        if "conv_out_conf" in trainable_modules:
+            if self.unet.conv_out_conf is not None:
+                for params in self.unet.conv_out_conf.parameters():
+                    params.requires_grad = True
+
     def _extract_dino_features(self, sar_images: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Extract DINO features from SAR images for cross-attention.
@@ -262,6 +268,10 @@ class ControlNetModule(pl.LightningModule):
             Tuple of (image_encoder_hidden_states, logits)
         """
         sar_normalized = self.normalize(sar_images)
+
+        # Cast to classifier dtype for mixed precision compatibility
+        classifier_dtype = next(self.classifier.parameters()).dtype
+        sar_normalized = sar_normalized.to(dtype=classifier_dtype)
 
         with torch.no_grad():
             logits, visual_features_dict = self.classifier(sar_normalized)
@@ -424,8 +434,63 @@ class ControlNetModule(pl.LightningModule):
             "loss_reg": loss_reg,
         }
 
+    # def training_step(self, batch: Tuple, batch_idx: int):
+    #     """Training step with manual optimization."""
+    #     # Unpack batch
+    #     if len(batch) == 4:
+    #         img_dict, labels, metadata, seasons = batch
+    #     elif len(batch) == 3:
+    #         img_dict, labels, _ = batch
+    #         metadata, seasons = None, None
+    #     else:
+    #         img_dict, labels = batch
+    #         metadata, seasons = None, None
+
+    #     opt_images = img_dict["opt"]
+    #     sar_images = img_dict["sar"]
+
+    #     # Forward pass
+    #     outputs = self.forward(sar_images, opt_images, labels, metadata, seasons)
+
+    #     # Compute loss
+    #     losses = self._compute_loss(
+    #         outputs["model_pred"],
+    #         outputs["target"],
+    #         outputs["confidence"]
+    #     )
+
+    #     # Manual optimization
+    #     opt = self.optimizers()
+    #     sch = self.lr_schedulers()
+
+    #     opt.zero_grad(set_to_none=self.cfg.training.set_grads_to_none)
+    #     self.manual_backward(losses["loss"])
+
+    #     # Gradient clipping
+    #     if self.cfg.training.max_grad_norm > 0:
+    #         params_to_clip = list(self.controlnet.parameters()) + list(self.unet.parameters())
+    #         self.clip_gradients(
+    #             opt,
+    #             gradient_clip_val=self.cfg.training.max_grad_norm,
+    #             gradient_clip_algorithm="norm"
+    #         )
+
+    #     opt.step()
+    #     sch.step()
+
+    #     # Log metrics
+    #     self.log_dict({
+    #         "train/loss": losses["loss"],
+    #         "train/loss_recon": losses["loss_recon"],
+    #         "train/loss_reg": losses["loss_reg"],
+    #         "train/lr": sch.get_last_lr()[0],
+    #     }, prog_bar=True, sync_dist=True, on_step=True, on_epoch=False)
+
+    #     return losses["loss"]
+
+
     def training_step(self, batch: Tuple, batch_idx: int):
-        """Training step with manual optimization."""
+        """Training step with automatic optimization."""
         # Unpack batch
         if len(batch) == 4:
             img_dict, labels, metadata, seasons = batch
@@ -449,31 +514,11 @@ class ControlNetModule(pl.LightningModule):
             outputs["confidence"]
         )
 
-        # Manual optimization
-        opt = self.optimizers()
-        sch = self.lr_schedulers()
-
-        opt.zero_grad(set_to_none=self.cfg.training.set_grads_to_none)
-        self.manual_backward(losses["loss"])
-
-        # Gradient clipping
-        if self.cfg.training.max_grad_norm > 0:
-            params_to_clip = list(self.controlnet.parameters()) + list(self.unet.parameters())
-            self.clip_gradients(
-                opt,
-                gradient_clip_val=self.cfg.training.max_grad_norm,
-                gradient_clip_algorithm="norm"
-            )
-
-        opt.step()
-        sch.step()
-
-        # Log metrics
+        # Log metrics (Lightning handles optimizer/scheduler automatically)
         self.log_dict({
             "train/loss": losses["loss"],
             "train/loss_recon": losses["loss_recon"],
             "train/loss_reg": losses["loss_reg"],
-            "train/lr": sch.get_last_lr()[0],
         }, prog_bar=True, sync_dist=True, on_step=True, on_epoch=False)
 
         return losses["loss"]
@@ -535,6 +580,9 @@ class ControlNetModule(pl.LightningModule):
             for name, module in self.unet.named_modules():
                 if name.endswith(("image_attentions",)):
                     params_to_optimize += list(module.parameters())
+        if "conv_out_conf" in cfg.trainable_modules:
+            if self.unet.conv_out_conf is not None:
+                params_to_optimize += list(self.unet.conv_out_conf.parameters())
 
         # Filter for parameters that require grad
         params_to_optimize = [p for p in params_to_optimize if p.requires_grad]

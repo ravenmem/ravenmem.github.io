@@ -16,8 +16,8 @@ experiment:
 model:
   backbone:
     name: "dinov3_vitl16"
-    repo_path: "/home/hyunseo/workspace/dinov3"
-    pretrained_weights: "/home/hyunseo/workspace/sar2opt/SAR2OPT/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth"
+    repo_path: "/root/hyun/dinov3"
+    pretrained_weights: "/root/hyun/현서/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth"
     embed_dim: 1024  # ViT-L embed dimension
 
   classifier:
@@ -43,9 +43,9 @@ data:
   data_type: "opt"  # opt or sar
 
   benv2:
-    images_lmdb: "/home/hyunseo/workspace/rico-hdl/Encoded-BigEarthNet"
-    metadata_parquet: "/home/hyunseo/workspace/sar2opt/dataset/BigEarthNetv2/metadata.parquet"
-    metadata_snow_cloud_parquet: "/home/hyunseo/workspace/sar2opt/dataset/BigEarthNetv2/metadata_for_patches_with_snow_cloud_or_shadow.parquet"
+    images_lmdb: "/root/hyun/rico-hdl/Encoded-BigEarthNet"
+    metadata_parquet: "/root/hyun/meta/metadata.parquet"
+    metadata_snow_cloud_parquet: "/root/hyun/meta/metadata_for_patches_with_snow_cloud_or_shadow.parquet"
     merge_patch: true
     img_size: [12, 120, 120]
 
@@ -109,8 +109,9 @@ logging:
     enabled: true
     resume_id: null  # Set to previous run ID for seamless WandB resume
 
-  validation_interval_steps: 3000
-  vis_interval: 1000
+  validation_interval_steps: null
+  check_val_every_n_epoch: 1
+  vis_interval: 10000
   log_every_n_steps: 1
   log_debug_stats: true  # Log per-layer debug statistics
 
@@ -136,13 +137,14 @@ debug:
 trainer:
   accelerator: "gpu"
   devices: "auto"
-  strategy: "ddp"
+  strategy: "ddp_find_unused_parameters_true"
   precision: ${training.amp.precision}
   max_epochs: ${training.num_epochs}
   accumulate_grad_batches: ${training.gradient_accumulation_steps}
   gradient_clip_val: 1.0
   log_every_n_steps: ${logging.log_every_n_steps}
   val_check_interval: ${logging.validation_interval_steps}
+  check_val_every_n_epoch: ${logging.check_val_every_n_epoch}
   enable_checkpointing: true
   enable_progress_bar: true
   deterministic: false

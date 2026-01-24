@@ -18,4 +18,4 @@ model:
     num_classes: 19
 
 distillation:
-  teacher_checkpoint: "./checkpoints/benv2/stage0_opt/best_model.ckpt"
+  teacher_checkpoint: "./checkpoints/12-04.pth"

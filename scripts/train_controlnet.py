@@ -40,6 +40,7 @@ from src.datamodules.multimodal_datamodule import MultimodalDataModule
 from src.callbacks.diffusion_viz_callback import DiffusionVisualizationCallback
 
 
+
 def validate_config(cfg: DictConfig):
     """Validate configuration before training."""
     # Check DINO checkpoint exists
@@ -57,7 +58,7 @@ def validate_config(cfg: DictConfig):
         )
 
     # Validate trainable modules
-    valid_modules = {"controlnet", "unet", "text_encoder", "image_attentions"}
+    valid_modules = {"controlnet", "unet", "text_encoder", "image_attentions", "conv_out_conf"}
     for module in cfg.training.trainable_modules:
         if module not in valid_modules:
             raise ValueError(
@@ -140,12 +141,13 @@ def main(cfg: DictConfig):
         "gradient_clip_val": cfg.trainer.gradient_clip_val,
         "log_every_n_steps": cfg.trainer.log_every_n_steps,
         "val_check_interval": cfg.trainer.val_check_interval,
+        "check_val_every_n_epoch": cfg.trainer.check_val_every_n_epoch,
         "enable_checkpointing": cfg.trainer.enable_checkpointing,
-        "enable_progress_bar": cfg.trainer.enable_progress_bar,
         "deterministic": cfg.trainer.deterministic,
         "logger": logger,
         "callbacks": callbacks,
         "default_root_dir": cfg.experiment.output_dir,
+        "limit_val_batches": cfg.validation.max_batches,
     }
 
     # Handle debug options

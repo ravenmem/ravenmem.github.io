@@ -2,7 +2,7 @@
 # ControlNet training configuration for BigEarthNet-v2 dataset
 
 defaults:
-  - /controlnet/default
+  - /default
 
 experiment:
   name: "controlnet_benv2_sar2opt"
@@ -13,7 +13,17 @@ data:
 
 model:
   dino:
-    checkpoint: "./checkpoints/benv2/stage1_sar/last.ckpt"
+    checkpoint: "./checkpoints/stage1_sar.pth"
 
   classifier:
     num_classes: 19
+
+# Memory optimizations to match shell script
+training:
+  trainable_modules:
+    - controlnet
+    - image_attentions
+    - conv_out_conf
+  set_grads_to_none: true
+  optimizer:
+    use_8bit: true  # Enable 8-bit Adam (was incorrectly false in default.yaml)

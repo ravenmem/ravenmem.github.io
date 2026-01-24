@@ -73,14 +73,16 @@ class MultimodalDataModule(pl.LightningDataModule):
                 data_type="opt",
                 is_train=True,
                 train_datatype="opt",
-                dataset=dataset
+                dataset=dataset,
+                calc_norm=True  # Skip normalization here; apply in module
             ),
             "sar": make_transform(
                 resize_size=resize_size,
                 data_type="sar",
                 is_train=True,
                 train_datatype="sar",
-                dataset=dataset
+                dataset=dataset,
+                calc_norm=True  # Skip normalization here; apply in module
             )
         }
 
@@ -90,14 +92,16 @@ class MultimodalDataModule(pl.LightningDataModule):
                 data_type="opt",
                 is_train=False,
                 train_datatype="opt",
-                dataset=dataset
+                dataset=dataset,
+                calc_norm=True  # Skip normalization here; apply in module
             ),
             "sar": make_transform(
                 resize_size=resize_size,
                 data_type="sar",
                 is_train=False,
                 train_datatype="sar",
-                dataset=dataset
+                dataset=dataset,
+                calc_norm=True  # Skip normalization here; apply in module
             )
         }
 
@@ -162,7 +166,7 @@ class MultimodalDataModule(pl.LightningDataModule):
         return DataLoader(
             self.train_dataset,
             batch_size=self.cfg.data.dataloader.batch_size,
-            shuffle=True,
+            shuffle=True,  # Lightning auto-wraps with DistributedSampler for DDP
             num_workers=self.cfg.data.dataloader.num_workers,
             pin_memory=self.cfg.data.dataloader.pin_memory,
             drop_last=True,

@@ -9,6 +9,7 @@ import os
 import gc
 import shutil
 from typing import Dict, List, Optional
+from contextlib import nullcontext
 
 import torch
 import torch.nn.functional as F
@@ -136,42 +137,46 @@ class DiffusionVisualizationCallback(Callback):
         seasons = self.fixed_val_batch["seasons"]
 
         with torch.no_grad():
-            # Get weight dtype
-            weight_dtype = pl_module.vae.dtype
+            # Use autocast for mixed precision inference
+            # This handles dtype mismatches between frozen (bf16) and trainable (fp32) modules
+            device = pl_module.device
+            autocast_dtype = torch.bfloat16 if pl_module.trainer.precision in ("bf16-mixed", "bf16") else torch.float16 if pl_module.trainer.precision in ("16-mixed", "fp16") else None
 
-            # Extract DINO features
-            image_encoder_hidden_states, logits = pl_module._extract_dino_features(sar_images)
-            image_encoder_hidden_states = image_encoder_hidden_states.to(dtype=weight_dtype)
+            autocast_ctx = torch.autocast(device_type="cuda", dtype=autocast_dtype) if autocast_dtype else nullcontext()
 
-            # Generate prompts
-            prompts = logits_to_prompt(
-                args=pl_module.cfg.prompts,
-                is_train=False,
-                logits=logits,
-                class_names=pl_module.class_prompts,
-                seasons=seasons,
-                threshold=pl_module.cfg.prompts.threshold,
-                max_classes=pl_module.cfg.prompts.max_classes
-            )
+            with autocast_ctx:
+                # Extract DINO features
+                image_encoder_hidden_states, logits = pl_module._extract_dino_features(sar_images)
 
-            negative_prompt = [pl_module.cfg.prompts.negative_prompt] * len(prompts)
+                # Generate prompts
+                prompts = logits_to_prompt(
+                    args=pl_module.cfg.prompts,
+                    is_train=False,
+                    logits=logits,
+                    class_names=pl_module.class_prompts,
+                    seasons=seasons,
+                    threshold=pl_module.cfg.prompts.threshold,
+                    max_classes=pl_module.cfg.prompts.max_classes
+                )
 
-            # Generate images
-            output = pipeline(
-                prompts,
-                sar_images,
-                num_inference_steps=self.inference_steps,
-                generator=self.generator,
-                guidance_scale=self.guidance_scale,
-                negative_prompt=negative_prompt,
-                conditioning_scale=1.0,
-                start_point="noise",
-                ram_encoder_hidden_states=image_encoder_hidden_states,
-                output_type="pil",
-                metadata=metadata
-            )
+                negative_prompt = [pl_module.cfg.prompts.negative_prompt] * len(prompts)
 
-            generated_images = output.images
+                # Generate images
+                output = pipeline(
+                    prompts,
+                    sar_images,
+                    num_inference_steps=self.inference_steps,
+                    generator=self.generator,
+                    guidance_scale=self.guidance_scale,
+                    negative_prompt=negative_prompt,
+                    conditioning_scale=1.0,
+                    start_point="noise",
+                    ram_encoder_hidden_states=image_encoder_hidden_states,
+                    output_type="pil",
+                    metadata=metadata
+                )
+
+                generated_images = output.images
 
         # Create visualization
         vis_image = self._create_comparison_grid(
@@ -181,14 +186,14 @@ class DiffusionVisualizationCallback(Callback):
         # Compute metrics
         metrics = self._compute_metrics(opt_images, generated_images)
 
-        # Log to wandb
+        # Log to wandb (let WandB auto-increment step to avoid conflicts)
         if trainer.logger and hasattr(trainer.logger, 'experiment'):
             import wandb
             trainer.logger.experiment.log({
                 "val/comparison_grid": wandb.Image(vis_image),
                 "val/psnr": metrics["psnr"],
                 "val/ssim": metrics["ssim"],
-            }, step=trainer.global_step)
+            })
 
         # Save locally
         vis_image.save(os.path.join(self.save_dir, f"comparison_step_{trainer.global_step}.png"))
@@ -257,7 +262,7 @@ class DiffusionVisualizationCallback(Callback):
         """Create side-by-side comparison grid."""
         B = min(len(generated_images), self.num_samples)
 
-        fig, axs = plt.subplots(B, 3, figsize=(15, 5 * B))
+        fig, axs = plt.subplots(B, 4, figsize=(20, 5 * B))
         fig.suptitle(
             f"SAR-to-Optical Generation (Step {trainer.global_step})",
             fontsize=16
@@ -279,7 +284,6 @@ class DiffusionVisualizationCallback(Callback):
             axs[idx, 1].imshow(gen_img)
             if idx == 0:
                 axs[idx, 1].set_title("Generated Optical", fontsize=12)
-            axs[idx, 1].set_xlabel(prompts[idx][:50] + "..." if len(prompts[idx]) > 50 else prompts[idx], fontsize=8)
             axs[idx, 1].axis('off')
 
             # Ground truth optical
@@ -288,6 +292,17 @@ class DiffusionVisualizationCallback(Callback):
             if idx == 0:
                 axs[idx, 2].set_title("Ground Truth Optical", fontsize=12)
             axs[idx, 2].axis('off')
+
+            # Prompt text panel
+            axs[idx, 3].text(0.5, 0.5, prompts[idx],
+                            transform=axs[idx, 3].transAxes,
+                            fontsize=10,
+                            verticalalignment='center',
+                            horizontalalignment='center',
+                            wrap=True)
+            axs[idx, 3].axis('off')
+            if idx == 0:
+                axs[idx, 3].set_title("Prompt", fontsize=12)
 
         plt.tight_layout()
 

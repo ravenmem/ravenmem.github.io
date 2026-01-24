@@ -248,7 +248,7 @@ class DINOKDModule(pl.LightningModule):
             self.log_dict(log_metrics, prog_bar=True, sync_dist=True, on_step=True, on_epoch=False)
         else:
             total_loss = loss_task
-            self.log("train/task_loss", loss_task, prog_bar=True, sync_dist=True, on_step=True, on_epoch=False)
+            self.log("train/task_loss", loss_task, prog_bar=True, sync_dist=True, on_step=True, on_epoch=False, rank_zero_only=True)
 
         return total_loss
 

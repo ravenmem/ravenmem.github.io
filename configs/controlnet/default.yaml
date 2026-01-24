@@ -14,16 +14,16 @@ experiment:
 # ========================
 model:
   # Pretrained Stable Diffusion
-  pretrained_model_path: "./stable-diffusion-2-1-base"
+  pretrained_model_path: "./stable-diffusion-2-1-base/stable-diffusion-2-1-base"
   controlnet_model_path: null  # Path to resume ControlNet training
   unet_model_path: null  # Path to resume UNet training
   revision: null
 
   # DINO encoder (from Stage 1 Lightning checkpoint)
   dino:
-    repo_path: "/home/hyunseo/workspace/dinov3"
+    repo_path: "/root/hyun/dinov3"
     checkpoint: "./checkpoints/benv2/stage1_sar/last.ckpt"  # Stage 1 Lightning checkpoint
-    weights: "/home/hyunseo/workspace/sar2opt/SAR2OPT/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth"
+    weights: "/root/hyun/현서/dinov3_vitl16_pretrain_sat493m-eadcf0ff.pth"
     embed_dim: 1024  # ViT-L embed dimension
     layers_to_extract: [14, 17, 20, 23]
 
@@ -48,13 +48,12 @@ model:
 # ========================
 data:
   dataset: "benv2"  # benv2 or sen12ms
-  resolution: 256
-  merge_patch: true
-
+  
   benv2:
-    images_lmdb: "/home/hyunseo/workspace/rico-hdl/Encoded-BigEarthNet"
-    metadata_parquet: "/home/hyunseo/workspace/sar2opt/dataset/BigEarthNetv2/metadata.parquet"
-    metadata_snow_cloud_parquet: "/home/hyunseo/workspace/sar2opt/dataset/BigEarthNetv2/metadata_for_patches_with_snow_cloud_or_shadow.parquet"
+    images_lmdb: "/root/hyun/rico-hdl/Encoded-BigEarthNet"
+    metadata_parquet: "/root/hyun/meta/metadata.parquet"
+    merge_patch: true
+    metadata_snow_cloud_parquet: "/root/hyun/meta/metadata_for_patches_with_snow_cloud_or_shadow.parquet"
     img_size: [12, 120, 120]
 
   sen12ms:
@@ -62,6 +61,8 @@ data:
     dino_checkpoint: null  # SEN12MS-specific DINO checkpoint (11 classes)
 
   preprocessing:
+    resize_size: 256
+
     norm_mean: [0.430, 0.411, 0.296]
     norm_std: [0.213, 0.156, 0.143]
 
@@ -77,11 +78,14 @@ data:
 # ========================
 training:
   num_epochs: 1000
-  max_train_steps: null  # If set, overrides num_epochs
+  max_train_steps: 100000  # If set, overrides num_epochs
   gradient_accumulation_steps: 4
 
   # Explicitly define which modules to train
-  trainable_modules: ["controlnet"]  # Options: controlnet, unet, text_encoder, image_attentions
+  trainable_modules: 
+    - controlnet
+    - image_attentions
+    - conv_out_conf
 
   optimizer:
     type: "adamw"
@@ -89,7 +93,7 @@ training:
     weight_decay: 0.01
     betas: [0.9, 0.999]
     epsilon: 1.0e-8
-    use_8bit: false
+    use_8bit: true  # Enable 8-bit Adam for memory efficiency
     scale_lr: false
 
   scheduler:
@@ -98,11 +102,11 @@ training:
     num_cycles: 1
     power: 1.0
 
-  gradient_checkpointing: false
+  gradient_checkpointing: True
   max_grad_norm: 1.0
-  set_grads_to_none: false
+  set_grads_to_none: true  # More memory efficient
   allow_tf32: false
-  enable_xformers: false
+  enable_xformers: True
 
 # ========================
 # LOSS CONFIGURATION
@@ -126,7 +130,7 @@ prompts:
 # VALIDATION CONFIGURATION
 # ========================
 validation:
-  interval_steps: 500  # Run validation every N steps (also checkpointing interval)
+  interval_steps: 12  # Run validation every N steps (also checkpointing interval)
   num_samples: 4  # Number of validation images to generate
   max_batches: 5  # Maximum batches for validation
   inference_steps: 100  # Denoising steps during validation
@@ -144,6 +148,7 @@ logging:
 
   report_to: "wandb"  # tensorboard, wandb, or all
   log_every_n_steps: 1
+  check_val_every_n_epoch: 1
 
 checkpoint:
   save_every_n_steps: 500
@@ -156,6 +161,7 @@ checkpoint:
 debug:
   fast_dev_run: false
   max_train_samples: null  # Truncate training data for debugging
+  overfit_batches: 0  # 0 = disabled
 
 # ========================
 # TRAINER (PyTorch Lightning)
@@ -170,6 +176,7 @@ trainer:
   gradient_clip_val: ${training.max_grad_norm}
   log_every_n_steps: ${logging.log_every_n_steps}
   val_check_interval: ${validation.interval_steps}
+  check_val_every_n_epoch: ${logging.check_val_every_n_epoch}
   enable_checkpointing: true
   enable_progress_bar: true
   deterministic: false
