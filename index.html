@@ -213,6 +213,49 @@
 
 <section class="section">
   <div class="container is-max-desktop">
+    <!-- Benchmark Results. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Benchmark Results</h2>
+      </div>
+    </div>
+
+    <div class="columns is-centered is-vcentered">
+      <!-- Left: Text -->
+      <div class="column is-half">
+        <div class="content has-text-justified">
+          <p>
+            We evaluate RAVEN on three benchmarks: <strong>RAVEN-QA</strong>, <strong>FindingDory</strong>, and <strong>NaVQA</strong>.
+          </p>
+          <p>
+            <strong>(a) RAVEN-QA:</strong> Our benchmark comprises real-world robot deployments, Habitat simulations, 
+            and human-ego videos with simple/hard query splits. RAVEN consistently outperforms all baselines, 
+            achieving up to 92.4% on real robot deployment tasks.
+          </p>
+          <p>
+            <strong>(b) FindingDory:</strong> On this memory-based navigation benchmark, RAVEN achieves higher success rates 
+            while maintaining 10× better memory efficiency compared to VLM Only approaches.
+          </p>
+          <p>
+            <strong>(c) NaVQA:</strong> RAVEN demonstrates strong performance on descriptive, positional, and temporal 
+            accuracy metrics, outperforming caption-based methods like ReMEmbR.
+          </p>
+        </div>
+      </div>
+      <!-- Right: Figure -->
+      <div class="column is-half">
+        <div class="content has-text-centered">
+          <img src="./static/images/raven_findingdory_navqa.jpg" alt="Benchmark Results" style="width: 100%;">
+        </div>
+      </div>
+    </div>
+    <!--/ Benchmark Results. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
     <!-- Results. -->
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
