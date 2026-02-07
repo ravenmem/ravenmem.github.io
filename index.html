@@ -18,7 +18,7 @@
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="icon" href="./static/images/RAVEN_logo.jpg">
+  <link rel="icon" href="./static/images/logo.jpg">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
@@ -107,16 +107,20 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <!-- Teaser Video -->
-      <video controls playsinline style="width: 100%; border-radius: 8px; margin-bottom: 1.5rem;">
-        <source src="./static/videos/raven_pre.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <!-- Teaser Image -->
-      <img src="./static/images/teaser.jpg" alt="RAVEN Overview" style="width: 100%;">
-      <h2 class="subtitle has-text-centered">
-        <span class="dnerf">RAVEN</span> leverages visual embeddings as a long-term memory for robotic question answering and navigation.
-      </h2>
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <!-- Teaser Video -->
+          <video controls playsinline style="width: 100%; border-radius: 8px; margin-bottom: 1.5rem;">
+            <source src="./static/videos/raven_pre.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <!-- Teaser Image -->
+          <img src="./static/images/teaser.jpg" alt="RAVEN Overview" style="width: 100%;">
+          <h2 class="subtitle has-text-centered">
+            <span class="dnerf">RAVEN</span> leverages visual embeddings as a long-term memory for robotic question answering and navigation.
+          </h2>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -234,32 +238,36 @@
       </div>
     </div>
 
-    <div class="columns is-centered is-vcentered">
-      <!-- Left: Text -->
-      <div class="column is-half">
-        <div class="content has-text-justified">
-          <p>
-            We evaluate RAVEN on three benchmarks: <strong>RAVEN-QA</strong>, <strong>FindingDory</strong>, and <strong>NaVQA</strong>.
-          </p>
-          <p>
-            <strong>(a) RAVEN-QA:</strong> Our benchmark comprises real-world robot deployments, Habitat simulations, 
-            and human-ego videos with simple/hard query splits. RAVEN consistently outperforms all baselines, 
-            achieving up to 92.4% on real robot deployment tasks.
-          </p>
-          <p>
-            <strong>(b) FindingDory:</strong> On this memory-based navigation benchmark, RAVEN achieves higher success rates 
-            while maintaining 10× better memory efficiency compared to VLM Only approaches.
-          </p>
-          <p>
-            <strong>(c) NaVQA:</strong> RAVEN demonstrates strong performance on descriptive, positional, and temporal 
-            accuracy metrics, outperforming caption-based methods like ReMEmbR.
-          </p>
-        </div>
-      </div>
-      <!-- Right: Figure -->
-      <div class="column is-half">
-        <div class="content has-text-centered">
-          <img src="./static/images/raven_findingdory_navqa.jpg" alt="Benchmark Results" style="width: 100%;">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <div class="columns is-vcentered">
+          <!-- Left: Text -->
+          <div class="column is-half">
+            <div class="content has-text-justified">
+              <p>
+                We evaluate RAVEN on three benchmarks: <strong>RAVEN-QA</strong>, <strong>FindingDory</strong>, and <strong>NaVQA</strong>.
+              </p>
+              <p>
+                <strong>(a) RAVEN-QA:</strong> Our benchmark comprises real-world robot deployments, Habitat simulations, 
+                and human-ego videos with simple/hard query splits. RAVEN consistently outperforms all baselines, 
+                achieving up to 92.4% on real robot deployment tasks.
+              </p>
+              <p>
+                <strong>(b) FindingDory:</strong> On this memory-based navigation benchmark, RAVEN achieves higher success rates 
+                while maintaining 10× better memory efficiency compared to VLM Only approaches.
+              </p>
+              <p>
+                <strong>(c) NaVQA:</strong> RAVEN demonstrates strong performance on descriptive, positional, and temporal 
+                accuracy metrics, outperforming caption-based methods like ReMEmbR.
+              </p>
+            </div>
+          </div>
+          <!-- Right: Figure -->
+          <div class="column is-half">
+            <div class="content has-text-centered">
+              <img src="./static/images/raven_findingdory_navqa.jpg" alt="Benchmark Results" style="width: 100%;">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -302,24 +310,48 @@
     </div>
 
     <div class="columns is-centered">
-      <!-- Video 1: Exploration -->
-      <div class="column is-half">
-        <div class="content has-text-centered">
-          <h3 class="title is-5">Exploration</h3>
-          <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
-            <source src="./static/videos/IRoM_exploration_3x.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+      <div class="column is-four-fifths">
+        <div class="columns">
+          <!-- Video 1: Exploration -->
+          <div class="column is-half">
+            <div class="content has-text-centered">
+              <h3 class="title is-5">Exploration</h3>
+              <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
+                <source src="./static/videos/IRoM_exploration_3_3x.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+          <!-- Video 2: Retrieval -->
+          <div class="column is-half">
+            <div class="content has-text-centered">
+              <h3 class="title is-5">Retrieval</h3>
+              <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
+                <source src="./static/videos/IRoM_retrieval_v3_1_3x.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
-      </div>
-      <!-- Video 2: Retrieval -->
-      <div class="column is-half">
-        <div class="content has-text-centered">
-          <h3 class="title is-5">Retrieval</h3>
-          <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
-            <source src="./static/videos/IRoM_retrieval_v2_3x.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+        <div class="columns">
+          <!-- Video 1: Exploration -->
+          <div class="column is-half">
+            <div class="content has-text-centered">
+              <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
+                <source src="./static/videos/bowen_hall_exploration_3x.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+          <!-- Video 2: Retrieval -->
+          <div class="column is-half">
+            <div class="content has-text-centered">
+              <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
+                <source src="./static/videos/bowen_hall_raven_retrieval_3x.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
       </div>
     </div>
