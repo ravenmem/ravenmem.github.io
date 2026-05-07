@@ -2941,281 +2941,72 @@ html {
   line-height: 1.6;
 }
 
-.method-flow-walkthrough {
-  margin-top: 28px;
-  padding: 24px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  background: var(--bg-elevated);
-  box-shadow: var(--shadow-sm);
-}
-
-.method-flow-walkthrough-head {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
-
-.method-flow-walkthrough-eyebrow {
-  font-family: 'Fira Code', monospace;
-  color: var(--honey-bronze);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.method-flow-walkthrough-heading {
-  font-family: 'Space Grotesk', -apple-system, sans-serif;
-  color: var(--text-primary);
-  font-size: 22px;
-  font-weight: 600;
-  margin: 4px 0 8px;
-  line-height: 1.2;
-}
-
-.method-flow-walkthrough-lead {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 13.5px;
-  line-height: 1.5;
-  max-width: 540px;
-}
-
-.method-flow-walkthrough-tag {
-  font-family: 'Fira Code', monospace;
-  font-size: 11.5px;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: rgba(14, 165, 233, 0.1);
-  color: var(--honey-bronze);
+.method-flow-scenario {
+  margin-top: 18px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg,
+    rgba(14, 165, 233, 0.08) 0%,
+    rgba(20, 184, 166, 0.06) 100%);
   border: 1px solid rgba(14, 165, 233, 0.2);
-  margin: 0 2px;
-}
-
-.method-flow-walkthrough-tabs {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.method-flow-walkthrough-tab {
-  font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-  cursor: pointer;
-  transition: all 0.18s ease;
-}
-
-.method-flow-walkthrough-tab:hover {
-  color: var(--text-primary);
-  border-color: rgba(14, 165, 233, 0.4);
-}
-
-.method-flow-walkthrough-tab.is-active {
-  background: var(--honey-bronze);
-  color: #fff;
-  border-color: var(--honey-bronze);
-  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.25);
-}
-
-.method-flow-query {
-  position: relative;
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: rgba(14, 165, 233, 0.08);
-  border: 1px solid rgba(14, 165, 233, 0.18);
-  margin-bottom: 16px;
-}
-
-.method-flow-query-label {
-  display: inline-block;
+.method-flow-scenario-eyebrow {
   font-family: 'Fira Code', monospace;
   font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--honey-bronze);
-  margin-bottom: 6px;
 }
 
-.method-flow-query-text {
+.method-flow-scenario-text {
   margin: 0;
   color: var(--text-primary);
   font-size: 14.5px;
-  line-height: 1.55;
-  font-weight: 500;
-}
-
-.method-flow-step-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.method-flow-step {
-  position: relative;
-  padding: 16px 18px;
-  border-radius: 14px;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-surface);
-}
-
-.method-flow-step.is-answer {
-  border-color: rgba(14, 165, 233, 0.35);
-  background: linear-gradient(135deg,
-    rgba(14, 165, 233, 0.08) 0%,
-    rgba(20, 184, 166, 0.06) 100%);
-}
-
-.method-flow-step-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.method-flow-step-label {
-  font-family: 'Space Grotesk', -apple-system, sans-serif;
-  color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.method-flow-step.is-answer .method-flow-step-label {
-  color: var(--honey-bronze);
-}
-
-.method-flow-step-tool {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Fira Code', monospace;
-  font-size: 11.5px;
-  font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(14, 165, 233, 0.1);
-  color: var(--honey-bronze);
-  border: 1px solid rgba(14, 165, 233, 0.2);
-}
-
-.method-flow-step-tool-icon {
-  font-size: 11px;
-  opacity: 0.8;
-}
-
-.method-flow-step-reasoning {
-  margin: 0 0 10px;
-  color: var(--text-secondary);
-  font-size: 13.5px;
-  line-height: 1.55;
-}
-
-.method-flow-step.is-answer .method-flow-step-reasoning {
-  color: var(--text-primary);
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-
-.method-flow-step-input {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  margin-bottom: 10px;
-}
-
-.method-flow-step-input-tag {
-  flex-shrink: 0;
-  font-family: 'Fira Code', monospace;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  padding-top: 1px;
-}
-
-.method-flow-step-input-value {
-  font-family: 'Fira Code', monospace;
-  font-size: 12px;
-  color: var(--text-primary);
-  word-break: break-word;
   line-height: 1.5;
-  background: transparent;
-  padding: 0;
+  font-weight: 500;
 }
 
-.method-flow-step-outcome {
-  margin: 0;
-  color: var(--text-muted);
+.method-flow-scenario-text strong {
+  color: var(--honey-bronze);
+  font-weight: 600;
+}
+
+.method-flow-scenario-hint {
   font-size: 12.5px;
-  line-height: 1.5;
+  color: var(--text-muted);
   font-style: italic;
 }
 
-.method-flow-step-answer {
+.method-flow-example {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(14, 165, 233, 0.08);
+  border: 1px solid rgba(14, 165, 233, 0.2);
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.method-flow-step-answer-pos {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  background: var(--bg-surface);
-  border: 1px solid rgba(14, 165, 233, 0.25);
-}
-
-.method-flow-step-answer-key {
+.method-flow-example-label {
   font-family: 'Fira Code', monospace;
   font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.method-flow-step-answer-value {
-  font-family: 'Fira Code', monospace;
-  font-size: 12.5px;
   color: var(--honey-bronze);
-  font-weight: 600;
-  background: transparent;
-  padding: 0;
 }
 
-@media (max-width: 640px) {
-  .method-flow-walkthrough-head {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .method-flow-walkthrough-tabs {
-    align-self: stretch;
-  }
-  .method-flow-walkthrough-tab {
-    flex: 1;
-    text-align: center;
-  }
+.method-flow-example-text {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 @media (max-width: 900px) {

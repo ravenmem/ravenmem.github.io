@@ -260,31 +260,13 @@
         <aside class="method-flow-detail" id="method-flow-detail" aria-live="polite"></aside>
       </div>
 
-      <div class="method-flow-walkthrough" aria-labelledby="method-flow-walkthrough-heading">
-        <div class="method-flow-walkthrough-head">
-          <div>
-            <span class="method-flow-walkthrough-eyebrow">Real-world rollouts</span>
-            <h3 class="method-flow-walkthrough-heading" id="method-flow-walkthrough-heading">Worked examples</h3>
-            <p class="method-flow-walkthrough-lead">
-              Two end-to-end agent traces from the appendix, recorded with
-              <span class="method-flow-walkthrough-tag">VLM = GPT-5.2</span>
-              and
-              <span class="method-flow-walkthrough-tag">Embedder = SigLIP</span>
-              in our research labs.
-            </p>
-          </div>
-          <div class="method-flow-walkthrough-tabs" role="tablist" aria-label="Worked example to display">
-            <button type="button" class="method-flow-walkthrough-tab is-active"
-              data-walkthrough="clothes" role="tab" aria-selected="true">
-              Example 1 · Clothes location
-            </button>
-            <button type="button" class="method-flow-walkthrough-tab"
-              data-walkthrough="cabinet" role="tab" aria-selected="false">
-              Example 2 · Cabinet gap
-            </button>
-          </div>
-        </div>
-        <div class="method-flow-walkthrough-body" id="method-flow-walkthrough-body" aria-live="polite"></div>
+      <div class="method-flow-scenario" aria-label="Worked example query">
+        <span class="method-flow-scenario-eyebrow">Worked example · Real-world rollout</span>
+        <p class="method-flow-scenario-text">
+          “Adam is just heading to his daily sports training. He went out with only his backpack.
+          Now he comes back and looks for his clothes. Question: <strong>Where are they?</strong>”
+        </p>
+        <span class="method-flow-scenario-hint">Hover any node above to see what RAVEN does at that step for this query.</span>
       </div>
     </section>
 
@@ -503,49 +485,81 @@
         frames: {
           eyebrow: 'Phase I · Capture',
           title: 'RGB Frames',
-          text: 'During exploration, the robot continuously streams RGB frames. Every frame is captured with its associated robot pose and a world-clock timestamp so that the raw sensor stream is already grounded in space and time.'
+          text: 'During exploration, the robot continuously streams RGB frames. Every frame is captured with its associated robot pose and a world-clock timestamp so that the raw sensor stream is already grounded in space and time.',
+          example: {
+            label: 'In this query',
+            text: 'At 19:04:02 the robot streamed a frame from pose [1.71, -4.13, 0.47] showing a black coat hanging on a stand by the workbench — the frame that will eventually answer Adam\u2019s question.'
+          }
         },
         encoder: {
           eyebrow: 'Phase I · Encode',
           title: 'Multimodal Encoder',
-          text: 'A pretrained multimodal encoder (CLIP, SigLIP, or QQMM-v2) maps each frame directly into a compact latent embedding. RAVEN never converts frames to text, so fine-grained visual semantics are preserved end-to-end.'
+          text: 'A pretrained multimodal encoder (CLIP, SigLIP, or QQMM-v2) maps each frame directly into a compact latent embedding. RAVEN never converts frames to text, so fine-grained visual semantics are preserved end-to-end.',
+          example: {
+            label: 'In this query',
+            text: 'SigLIP turns the 19:04:02 frame into a single dense embedding without ever describing it as "coat" or "workbench" — the texture, hanger, and garment shape are all kept in the latent.'
+          }
         },
         triplet: {
           eyebrow: 'Phase I · Bind',
           title: 'Triplet Memory',
-          text: 'The visual embedding, the robot pose at capture, and the world-clock timestamp are bundled into a single record — a visuo-spatial-temporal triplet that supports lookup along any of the three axes.'
+          text: 'The visual embedding, the robot pose at capture, and the world-clock timestamp are bundled into a single record — a visuo-spatial-temporal triplet that supports lookup along any of the three axes.',
+          example: {
+            label: 'Triplet stored',
+            text: '⟨ vis : SigLIP-embedding ,  pose : [1.71, -4.13, 0.47] ,  time : 19:04:02 ⟩'
+          }
         },
         database: {
           eyebrow: 'Phase I · Index',
           title: 'Vector Database',
-          text: 'All triplets are indexed in a vector database. Embedding-similarity queries run as fast nearest-neighbour search; pose and time live as structured fields that filter or sort the results.'
+          text: 'All triplets are indexed in a vector database. Embedding-similarity queries run as fast nearest-neighbour search; pose and time live as structured fields that filter or sort the results.',
+          example: {
+            label: 'Index state',
+            text: 'The coat-stand triplet sits alongside thousands of other frames captured during the lab exploration run, all queryable by visual similarity, pose, or timestamp.'
+          }
         },
         retrieve: {
           eyebrow: 'Phase II · Query',
           title: 'Retrieval Queries',
-          text: 'At query time the agent issues semantic, spatial, or temporal queries (or composes them) against the index. Retrieved triplets carry both the source frame and the place-and-time it came from.'
+          text: 'At query time the agent issues semantic, spatial, or temporal queries (or composes them) against the index. Retrieved triplets carry both the source frame and the place-and-time it came from.',
+          example: {
+            label: 'Agent strategy',
+            text: 'Asked "Where are Adam\u2019s clothes?", the agent first fires a broad semantic query, decides the evidence is insufficient, then refines the wording before producing a navigation goal.'
+          }
         },
         semantic: {
           eyebrow: 'Retrieval mode',
           title: 'Semantic similarity',
-          text: 'The agent embeds a text or image query and returns triplets whose visual embeddings are nearest in the latent space — useful for "find anything that looks like X" questions.'
+          text: 'The agent embeds a text or image query and returns triplets whose visual embeddings are nearest in the latent space — useful for "find anything that looks like X" questions.',
+          example: {
+            label: 'Used here',
+            text: 'tool_input = "clothes jacket hoodie shirt pants on coat rack coat stand hanger chair bench locker gym towel" → top hit is the 19:04:02 frame at [1.71, -4.13, 0.47] (similarity 0.067). RAVEN answers: "Adam\u2019s clothes are on the coat stand next to the workbench."'
+          }
         },
         spatial: {
           eyebrow: 'Retrieval mode',
           title: 'Spatial proximity',
-          text: 'Queries are filtered by robot pose: return triplets captured within a region or radius — useful for "what was near this location" questions and grounding navigation goals.'
+          text: 'Queries are filtered by robot pose: return triplets captured within a region or radius — useful for "what was near this location" questions and grounding navigation goals.',
+          example: {
+            label: 'How it would help',
+            text: 'A follow-up like "what else was near the coat stand?" filters the index by pose ≈ [1.71, -4.13, 0.47] and returns the desk, chair, and tripod frames captured within a small radius.'
+          }
         },
         temporal: {
           eyebrow: 'Retrieval mode',
           title: 'Temporal window',
-          text: 'Queries are bounded by world-clock time: return triplets captured inside a time window or sequence — useful for "what happened before / after / while" questions.'
+          text: 'Queries are bounded by world-clock time: return triplets captured inside a time window or sequence — useful for "what happened before / after / while" questions.',
+          example: {
+            label: 'How it would help',
+            text: 'A question like "what was the robot looking at right before Adam came back?" returns the frames in chronological order around 19:04, starting from the requested timestamp.'
+          }
         }
       };
 
       const idleDetail = {
         eyebrow: 'Visuo-Spatial-Temporal Memory',
         title: 'Hover any stage',
-        text: 'Move over a node in the diagram to inspect that step of the RAVEN pipeline. The lower row shows the three retrieval modes the agent can compose at query time.'
+        text: 'Move over a node in the diagram to inspect that step of the RAVEN pipeline. The example below the diagram is the user query the agent has to answer; each stage shows what RAVEN does at that step to resolve it.'
       };
 
       const renderDetail = (info) => {
@@ -563,6 +577,19 @@
         text.textContent = info.text;
 
         detailPanel.append(eyebrow, title, text);
+
+        if (info.example) {
+          const example = document.createElement('div');
+          example.className = 'method-flow-example';
+          const exampleLabel = document.createElement('span');
+          exampleLabel.className = 'method-flow-example-label';
+          exampleLabel.textContent = info.example.label;
+          const exampleText = document.createElement('p');
+          exampleText.className = 'method-flow-example-text';
+          exampleText.textContent = info.example.text;
+          example.append(exampleLabel, exampleText);
+          detailPanel.append(example);
+        }
       };
 
       renderDetail(idleDetail);
@@ -625,132 +652,6 @@
           encoderNameEl.textContent = encoderNames[encoderIdx];
         }, 1800);
       }
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const body = document.getElementById('method-flow-walkthrough-body');
-      const tabs = document.querySelectorAll('.method-flow-walkthrough-tab');
-      if (!body || !tabs.length) return;
-
-      const walkthroughs = {
-        clothes: {
-          query: "Adam is just heading to his daily sports training. He went out with only his backpack. Now he comes back and looks for his clothes. Question: Where are they?",
-          steps: [
-            {
-              kind: 'tool',
-              label: 'Step 1 · Semantic similarity',
-              tool: 'retrieve_from_text',
-              reasoning: 'No memories yet. Search the visual memory for scenes of Adam leaving / returning and where clothes were placed (closet, chair, laundry basket, bedroom).',
-              input: 'Adam clothes location before leaving for sports training closet chair laundry basket bedroom',
-              outcome: 'Returns 5 lab/office frames (similarity 0.077–0.094). No clear pile of clothes — evidence insufficient, refine the query.'
-            },
-            {
-              kind: 'tool',
-              label: 'Step 2 · Semantic similarity (refined)',
-              tool: 'retrieve_from_text',
-              reasoning: 'Use a more targeted query for clothing items (shirt, pants, jacket) and likely surfaces (coat rack, hanger, chair, bench).',
-              input: 'clothes jacket hoodie shirt pants on coat rack coat stand hanger chair bench locker gym towel',
-              outcome: 'Frame at 19:04:02 shows a black garment hanging on a coat stand next to a desk — strong match.'
-            },
-            {
-              kind: 'answer',
-              label: 'Final answer · navigate',
-              text: "Adam's clothes are hanging on the coat stand next to the workbench area, around (1.71, -4.13, 0.47).",
-              position: '[1.71, -4.13, 0.47]',
-              timestamp: '19:04:02'
-            }
-          ]
-        },
-        cabinet: {
-          query: "My friend Alex prepared a surprise for me and said he stealthily hid something behind a cabinet. Robot, please go back to the place where you look directly into a gap between the cabinet and the wall.",
-          steps: [
-            {
-              kind: 'tool',
-              label: 'Step 1 · Semantic similarity',
-              tool: 'retrieve_from_text',
-              reasoning: 'No prior memory provided. Locate the scene where the robot looked directly into a gap between a cabinet and the wall.',
-              input: 'look directly into a gap between the cabinet and the wall behind a cabinet',
-              outcome: 'Frame at 19:10:00 (similarity 0.172) shows a close-up narrow vertical gap between a tall cabinet and an adjacent wall — exact match.'
-            },
-            {
-              kind: 'answer',
-              label: 'Final answer · navigate',
-              text: 'Go back to the spot where the robot looked directly into the cabinet–wall gap.',
-              position: '[-18.03, -9.85, -0.19]',
-              timestamp: '19:10:00'
-            }
-          ]
-        }
-      };
-
-      const buildElement = (tag, className, text) => {
-        const el = document.createElement(tag);
-        if (className) el.className = className;
-        if (text != null) el.textContent = text;
-        return el;
-      };
-
-      const renderStep = (step) => {
-        const card = buildElement('article', `method-flow-step is-${step.kind}`);
-        const head = buildElement('header', 'method-flow-step-head');
-        head.append(buildElement('span', 'method-flow-step-label', step.label));
-        if (step.kind === 'tool') {
-          const chip = buildElement('span', 'method-flow-step-tool');
-          chip.append(buildElement('span', 'method-flow-step-tool-icon', '⌘'));
-          chip.append(document.createTextNode(step.tool));
-          head.append(chip);
-        }
-        card.append(head);
-
-        if (step.kind === 'tool') {
-          card.append(buildElement('p', 'method-flow-step-reasoning', step.reasoning));
-          const inputRow = buildElement('div', 'method-flow-step-input');
-          inputRow.append(buildElement('span', 'method-flow-step-input-tag', 'tool_input'));
-          inputRow.append(buildElement('code', 'method-flow-step-input-value', step.input));
-          card.append(inputRow);
-          card.append(buildElement('p', 'method-flow-step-outcome', step.outcome));
-        } else {
-          card.append(buildElement('p', 'method-flow-step-reasoning', step.text));
-          const meta = buildElement('div', 'method-flow-step-answer');
-          const pos = buildElement('span', 'method-flow-step-answer-pos');
-          pos.append(buildElement('span', 'method-flow-step-answer-key', 'position'));
-          pos.append(buildElement('code', 'method-flow-step-answer-value', step.position));
-          meta.append(pos);
-          const time = buildElement('span', 'method-flow-step-answer-pos');
-          time.append(buildElement('span', 'method-flow-step-answer-key', 'timestamp'));
-          time.append(buildElement('code', 'method-flow-step-answer-value', step.timestamp));
-          meta.append(time);
-          card.append(meta);
-        }
-        return card;
-      };
-
-      const renderWalkthrough = (key) => {
-        const data = walkthroughs[key];
-        if (!data) return;
-        body.replaceChildren();
-
-        const queryBlock = buildElement('div', 'method-flow-query');
-        queryBlock.append(buildElement('span', 'method-flow-query-label', 'User query'));
-        queryBlock.append(buildElement('p', 'method-flow-query-text', data.query));
-        body.append(queryBlock);
-
-        const list = buildElement('div', 'method-flow-step-list');
-        data.steps.forEach((step) => list.append(renderStep(step)));
-        body.append(list);
-      };
-
-      tabs.forEach((tab) => {
-        tab.addEventListener('click', () => {
-          tabs.forEach((t) => {
-            t.classList.toggle('is-active', t === tab);
-            t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
-          });
-          renderWalkthrough(tab.dataset.walkthrough);
-        });
-      });
-
-      renderWalkthrough('clothes');
     });
 
     document.addEventListener('DOMContentLoaded', () => {
