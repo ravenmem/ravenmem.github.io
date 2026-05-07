@@ -259,6 +259,33 @@
         </div>
         <aside class="method-flow-detail" id="method-flow-detail" aria-live="polite"></aside>
       </div>
+
+      <div class="method-flow-walkthrough" aria-labelledby="method-flow-walkthrough-heading">
+        <div class="method-flow-walkthrough-head">
+          <div>
+            <span class="method-flow-walkthrough-eyebrow">Real-world rollouts</span>
+            <h3 class="method-flow-walkthrough-heading" id="method-flow-walkthrough-heading">Worked examples</h3>
+            <p class="method-flow-walkthrough-lead">
+              Two end-to-end agent traces from the appendix, recorded with
+              <span class="method-flow-walkthrough-tag">VLM = GPT-5.2</span>
+              and
+              <span class="method-flow-walkthrough-tag">Embedder = SigLIP</span>
+              in our research labs.
+            </p>
+          </div>
+          <div class="method-flow-walkthrough-tabs" role="tablist" aria-label="Worked example to display">
+            <button type="button" class="method-flow-walkthrough-tab is-active"
+              data-walkthrough="clothes" role="tab" aria-selected="true">
+              Example 1 · Clothes location
+            </button>
+            <button type="button" class="method-flow-walkthrough-tab"
+              data-walkthrough="cabinet" role="tab" aria-selected="false">
+              Example 2 · Cabinet gap
+            </button>
+          </div>
+        </div>
+        <div class="method-flow-walkthrough-body" id="method-flow-walkthrough-body" aria-live="polite"></div>
+      </div>
     </section>
 
     <section class="card-surface content-card tool-card">
@@ -598,6 +625,132 @@
           encoderNameEl.textContent = encoderNames[encoderIdx];
         }, 1800);
       }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const body = document.getElementById('method-flow-walkthrough-body');
+      const tabs = document.querySelectorAll('.method-flow-walkthrough-tab');
+      if (!body || !tabs.length) return;
+
+      const walkthroughs = {
+        clothes: {
+          query: "Adam is just heading to his daily sports training. He went out with only his backpack. Now he comes back and looks for his clothes. Question: Where are they?",
+          steps: [
+            {
+              kind: 'tool',
+              label: 'Step 1 · Semantic similarity',
+              tool: 'retrieve_from_text',
+              reasoning: 'No memories yet. Search the visual memory for scenes of Adam leaving / returning and where clothes were placed (closet, chair, laundry basket, bedroom).',
+              input: 'Adam clothes location before leaving for sports training closet chair laundry basket bedroom',
+              outcome: 'Returns 5 lab/office frames (similarity 0.077–0.094). No clear pile of clothes — evidence insufficient, refine the query.'
+            },
+            {
+              kind: 'tool',
+              label: 'Step 2 · Semantic similarity (refined)',
+              tool: 'retrieve_from_text',
+              reasoning: 'Use a more targeted query for clothing items (shirt, pants, jacket) and likely surfaces (coat rack, hanger, chair, bench).',
+              input: 'clothes jacket hoodie shirt pants on coat rack coat stand hanger chair bench locker gym towel',
+              outcome: 'Frame at 19:04:02 shows a black garment hanging on a coat stand next to a desk — strong match.'
+            },
+            {
+              kind: 'answer',
+              label: 'Final answer · navigate',
+              text: "Adam's clothes are hanging on the coat stand next to the workbench area, around (1.71, -4.13, 0.47).",
+              position: '[1.71, -4.13, 0.47]',
+              timestamp: '19:04:02'
+            }
+          ]
+        },
+        cabinet: {
+          query: "My friend Alex prepared a surprise for me and said he stealthily hid something behind a cabinet. Robot, please go back to the place where you look directly into a gap between the cabinet and the wall.",
+          steps: [
+            {
+              kind: 'tool',
+              label: 'Step 1 · Semantic similarity',
+              tool: 'retrieve_from_text',
+              reasoning: 'No prior memory provided. Locate the scene where the robot looked directly into a gap between a cabinet and the wall.',
+              input: 'look directly into a gap between the cabinet and the wall behind a cabinet',
+              outcome: 'Frame at 19:10:00 (similarity 0.172) shows a close-up narrow vertical gap between a tall cabinet and an adjacent wall — exact match.'
+            },
+            {
+              kind: 'answer',
+              label: 'Final answer · navigate',
+              text: 'Go back to the spot where the robot looked directly into the cabinet–wall gap.',
+              position: '[-18.03, -9.85, -0.19]',
+              timestamp: '19:10:00'
+            }
+          ]
+        }
+      };
+
+      const buildElement = (tag, className, text) => {
+        const el = document.createElement(tag);
+        if (className) el.className = className;
+        if (text != null) el.textContent = text;
+        return el;
+      };
+
+      const renderStep = (step) => {
+        const card = buildElement('article', `method-flow-step is-${step.kind}`);
+        const head = buildElement('header', 'method-flow-step-head');
+        head.append(buildElement('span', 'method-flow-step-label', step.label));
+        if (step.kind === 'tool') {
+          const chip = buildElement('span', 'method-flow-step-tool');
+          chip.append(buildElement('span', 'method-flow-step-tool-icon', '⌘'));
+          chip.append(document.createTextNode(step.tool));
+          head.append(chip);
+        }
+        card.append(head);
+
+        if (step.kind === 'tool') {
+          card.append(buildElement('p', 'method-flow-step-reasoning', step.reasoning));
+          const inputRow = buildElement('div', 'method-flow-step-input');
+          inputRow.append(buildElement('span', 'method-flow-step-input-tag', 'tool_input'));
+          inputRow.append(buildElement('code', 'method-flow-step-input-value', step.input));
+          card.append(inputRow);
+          card.append(buildElement('p', 'method-flow-step-outcome', step.outcome));
+        } else {
+          card.append(buildElement('p', 'method-flow-step-reasoning', step.text));
+          const meta = buildElement('div', 'method-flow-step-answer');
+          const pos = buildElement('span', 'method-flow-step-answer-pos');
+          pos.append(buildElement('span', 'method-flow-step-answer-key', 'position'));
+          pos.append(buildElement('code', 'method-flow-step-answer-value', step.position));
+          meta.append(pos);
+          const time = buildElement('span', 'method-flow-step-answer-pos');
+          time.append(buildElement('span', 'method-flow-step-answer-key', 'timestamp'));
+          time.append(buildElement('code', 'method-flow-step-answer-value', step.timestamp));
+          meta.append(time);
+          card.append(meta);
+        }
+        return card;
+      };
+
+      const renderWalkthrough = (key) => {
+        const data = walkthroughs[key];
+        if (!data) return;
+        body.replaceChildren();
+
+        const queryBlock = buildElement('div', 'method-flow-query');
+        queryBlock.append(buildElement('span', 'method-flow-query-label', 'User query'));
+        queryBlock.append(buildElement('p', 'method-flow-query-text', data.query));
+        body.append(queryBlock);
+
+        const list = buildElement('div', 'method-flow-step-list');
+        data.steps.forEach((step) => list.append(renderStep(step)));
+        body.append(list);
+      };
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          tabs.forEach((t) => {
+            t.classList.toggle('is-active', t === tab);
+            t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+          });
+          renderWalkthrough(tab.dataset.walkthrough);
+        });
+      });
+
+      renderWalkthrough('clothes');
     });
 
     document.addEventListener('DOMContentLoaded', () => {
