@@ -3009,6 +3009,76 @@ html {
   line-height: 1.55;
 }
 
+.method-flow-example-figure {
+  margin: 10px 0 0;
+  padding: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  background: rgba(15, 23, 42, 0.04);
+  line-height: 0;
+}
+
+.method-flow-example-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.method-flow-example-vector {
+  margin: 10px 0 0;
+  padding: 12px 14px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.04), rgba(14, 165, 233, 0.06));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.method-flow-example-vector-svg {
+  display: block;
+  width: 100%;
+  height: 64px;
+}
+
+.method-flow-example-vector-axis {
+  stroke: rgba(15, 23, 42, 0.18);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+
+.method-flow-example-vector-bar {
+  transition: opacity 120ms ease;
+}
+
+.method-flow-example-vector-bar-pos {
+  fill: var(--honey-bronze);
+}
+
+.method-flow-example-vector-bar-neg {
+  fill: rgba(14, 165, 233, 0.65);
+}
+
+.method-flow-example-vector-code {
+  font-family: 'Fira Code', monospace;
+  font-size: 11.5px;
+  color: var(--text-primary);
+  background: rgba(15, 23, 42, 0.06);
+  border-radius: 6px;
+  padding: 4px 8px;
+  align-self: flex-start;
+  letter-spacing: 0.02em;
+}
+
+.method-flow-example-vector-caption {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
 @media (max-width: 900px) {
   .method-flow-board {
     grid-template-columns: 1fr;

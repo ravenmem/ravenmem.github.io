@@ -487,7 +487,11 @@
           text: 'During exploration, the robot continuously streams RGB frames. Every frame is captured with its associated robot pose and a world-clock timestamp so that the raw sensor stream is already grounded in space and time.',
           example: {
             label: 'In this query',
-            text: 'At 19:04:02 the robot streamed a frame from pose [1.71, -4.13, 0.47] showing a black coat hanging on a stand by the workbench — the frame that will eventually answer Adam\u2019s question.'
+            text: 'At 19:04:02 the robot streamed a frame from pose [1.71, -4.13, 0.47] showing a black coat hanging on a stand by the workbench — the frame that will eventually answer Adam\u2019s question.',
+            image: {
+              src: './static/images/method/rgb-frame-clothes.png',
+              alt: 'RGB frame captured by the Unitree Go1 showing a black coat hanging on a stand near a lab workbench'
+            }
           }
         },
         encoder: {
@@ -496,7 +500,11 @@
           text: 'A pretrained multimodal encoder (CLIP, SigLIP, or QQMM-v2) maps each frame directly into a compact latent embedding. RAVEN never converts frames to text, so fine-grained visual semantics are preserved end-to-end.',
           example: {
             label: 'In this query',
-            text: 'SigLIP turns the 19:04:02 frame into a single dense embedding without ever describing it as "coat" or "workbench" — the texture, hanger, and garment shape are all kept in the latent.'
+            text: 'SigLIP turns the 19:04:02 frame into a single dense embedding without ever describing it as "coat" or "workbench" — the texture, hanger, and garment shape are all kept in the latent.',
+            vector: {
+              caption: 'SigLIP embedding · first 32 of 768 dims',
+              values: [0.31, -0.08, 0.92, 0.47, -0.55, 0.18, 0.74, -0.21, 0.63, 0.12, -0.39, 0.81, 0.04, -0.66, 0.52, 0.28, -0.13, 0.71, 0.36, -0.48, 0.59, 0.22, -0.07, 0.85, -0.31, 0.44, 0.17, -0.58, 0.69, 0.09, -0.24, 0.78]
+            }
           }
         },
         triplet: {
@@ -561,6 +569,71 @@
         text: 'Move over a node in the diagram to inspect that step of the RAVEN pipeline. The example below the diagram is the user query the agent has to answer; each stage shows what RAVEN does at that step to resolve it.'
       };
 
+      const renderVector = (vector) => {
+        const wrap = document.createElement('figure');
+        wrap.className = 'method-flow-example-vector';
+
+        const values = vector.values || [];
+        const barWidth = 7;
+        const gap = 3;
+        const innerHeight = 56;
+        const innerWidth = values.length * barWidth + Math.max(0, values.length - 1) * gap;
+        const padX = 6;
+        const padY = 4;
+        const totalWidth = innerWidth + padX * 2;
+        const totalHeight = innerHeight + padY * 2;
+
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.setAttribute('class', 'method-flow-example-vector-svg');
+        svg.setAttribute('viewBox', `0 0 ${totalWidth} ${totalHeight}`);
+        svg.setAttribute('preserveAspectRatio', 'none');
+        svg.setAttribute('role', 'img');
+        svg.setAttribute('aria-label', vector.caption || 'Encoding vector preview');
+
+        const baseline = padY + innerHeight / 2;
+        const axis = document.createElementNS(svgNS, 'line');
+        axis.setAttribute('x1', padX);
+        axis.setAttribute('x2', padX + innerWidth);
+        axis.setAttribute('y1', baseline);
+        axis.setAttribute('y2', baseline);
+        axis.setAttribute('class', 'method-flow-example-vector-axis');
+        svg.append(axis);
+
+        const maxAbs = values.reduce((m, v) => Math.max(m, Math.abs(v)), 1e-6);
+        values.forEach((value, idx) => {
+          const x = padX + idx * (barWidth + gap);
+          const magnitude = (Math.abs(value) / maxAbs) * (innerHeight / 2 - 2);
+          const y = value >= 0 ? baseline - magnitude : baseline;
+          const rect = document.createElementNS(svgNS, 'rect');
+          rect.setAttribute('x', x);
+          rect.setAttribute('y', y);
+          rect.setAttribute('width', barWidth);
+          rect.setAttribute('height', Math.max(magnitude, 1));
+          rect.setAttribute('rx', 1.5);
+          rect.setAttribute('class', value >= 0 ? 'method-flow-example-vector-bar method-flow-example-vector-bar-pos' : 'method-flow-example-vector-bar method-flow-example-vector-bar-neg');
+          svg.append(rect);
+        });
+
+        wrap.append(svg);
+
+        const previewCount = Math.min(6, values.length);
+        const preview = values.slice(0, previewCount).map((v) => v.toFixed(2)).join(', ');
+        const code = document.createElement('code');
+        code.className = 'method-flow-example-vector-code';
+        code.textContent = `[ ${preview}${values.length > previewCount ? ', …' : ''} ]`;
+        wrap.append(code);
+
+        if (vector.caption) {
+          const caption = document.createElement('figcaption');
+          caption.className = 'method-flow-example-vector-caption';
+          caption.textContent = vector.caption;
+          wrap.append(caption);
+        }
+
+        return wrap;
+      };
+
       const renderDetail = (info) => {
         detailPanel.replaceChildren();
         const eyebrow = document.createElement('div');
@@ -587,6 +660,19 @@
           exampleText.className = 'method-flow-example-text';
           exampleText.textContent = info.example.text;
           example.append(exampleLabel, exampleText);
+          if (info.example.image) {
+            const figure = document.createElement('figure');
+            figure.className = 'method-flow-example-figure';
+            const img = document.createElement('img');
+            img.src = info.example.image.src;
+            img.alt = info.example.image.alt || '';
+            img.loading = 'lazy';
+            figure.append(img);
+            example.append(figure);
+          }
+          if (info.example.vector) {
+            example.append(renderVector(info.example.vector));
+          }
           detailPanel.append(example);
         }
       };
