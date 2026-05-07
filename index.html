@@ -1,397 +1,1212 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="RAVEN: A retrieval-augmented visual memory system for robotic question answering and navigation.">
-  <meta name="keywords" content="Robot Learning: Foundational Models, Autonomous Navigation">
+    content="RAVEN: a retrieval-augmented visual memory system for robotic question answering and navigation.">
+  <meta name="keywords"
+    content="RAVEN, robotics, visual memory, robot question answering, navigation, retrieval augmented generation">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RAVEN: Long-Horizon Reasoning and Navigation with a Visuo-Spatial-Temporal Memory</title>
-
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-        rel="stylesheet">
-
-  <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
-  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="icon" href="./static/images/logo.png">
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script src="./static/js/bulma-carousel.min.js"></script>
-  <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
+  <link rel="icon" href="./static/images/logo.png" type="image/png">
+  <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-
-
-<section class="hero">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">RAVEN: Long-Horizon Reasoning and Navigation with a Visuo-Spatial-Temporal Memory</h1>
-          <div class="is-size-5 publication-authors">
-            <!-- TODO: Update with actual authors after review -->
-            <span class="author-block">
-              <a href="https://yixun-hu.github.io/">Yixun Hu</a><sup>*1</sup>,
-              <a href="https://zzcnewly.github.io/">Zhicheng Zheng</a><sup>*1</sup>,
-              <a href="https://lihzha.github.io/">Lihan Zha</a><sup>1</sup>,
-              <a href="https://xingcw.github.io/">Chunwei Xing</a><sup>2</sup>,
-              <a href="https://www.linkedin.com/in/rajdeep1008/">Rajdeep Singh</a><sup>2</sup>,
-              <a href="https://epicrider.github.io/">Omar Hossain</a><sup>2</sup>,
-              <a href="https://antonilo.github.io/">Antonio Loquercio</a><sup>2</sup>,
-              <a href="https://robodhruv.github.io/">Dhruv Shah</a><sup>1</sup>
-            </span>
-          </div>
-
-          <div class="is-size-5 publication-authors">
-            <!-- TODO: Update with actual affiliations after review -->
-            <span class="author-block"><sup>*</sup>Equal contribution. <sup>1</sup>Princeton University, <sup>2</sup>University of Pennsylvania.</span>
-          </div>
-
-          <div class="column has-text-centered">
-            <div class="publication-links">
-              <!-- PDF Link. -->
-              <span class="link-block">
-                <a href="#"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fas fa-file-pdf"></i>
-                  </span>
-                  <span>Paper</span>
-                </a>
-              </span>
-              <span class="link-block">
-                <a href="#"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                </a>
-              </span>
-              <!-- Video Link. -->
-              <span class="link-block">
-                <a href="#"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-youtube"></i>
-                  </span>
-                  <span>Video</span>
-                </a>
-              </span>
-              <!-- Code Link. -->
-              <span class="link-block">
-                <a href="#"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code</span>
-                  </a>
-              </span>
-            </div>
-
-          </div>
-        </div>
+  <nav class="progress-sidebar" aria-label="Page progress">
+    <div class="progress-track">
+      <div class="progress-line"></div>
+      <div class="progress-line-fill"></div>
+      <div class="progress-item" data-section="hero">
+        <a href="#">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Intro</span>
+        </a>
+      </div>
+      <div class="progress-item" data-section="abstract">
+        <a href="#abstract">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Abstract</span>
+        </a>
+      </div>
+      <div class="progress-item" data-section="method">
+        <a href="#method">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Method</span>
+        </a>
+      </div>
+      <div class="progress-item" data-section="results">
+        <a href="#results">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Results</span>
+        </a>
+      </div>
+      <div class="progress-item" data-section="deployment">
+        <a href="#deployment">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Robot</span>
+        </a>
+      </div>
+      <div class="progress-item" data-section="demos">
+        <a href="#demos">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Demos</span>
+        </a>
+      </div>
+      <div class="progress-item" data-section="resources">
+        <a href="#resources">
+          <span class="progress-dot"></span>
+          <span class="progress-label">Resources</span>
+        </a>
       </div>
     </div>
-  </div>
-</section>
+  </nav>
 
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <div class="columns is-centered">
-        <div class="column is-four-fifths">
-          <!-- Teaser Video -->
-          <video controls playsinline style="width: 100%; border-radius: 8px; margin-bottom: 1.5rem;">
-            <source src="./static/videos/raven_pre.mp4" type="video/mp4">
+  <main class="main-content">
+    <section class="hero-flow" aria-labelledby="paper-title">
+      <div class="hero-orb" aria-hidden="true"></div>
+      <img class="raven-logo-mark" src="./static/images/logo.png" alt="RAVEN logo">
+      <h1 class="hero-text" id="paper-title">RAVEN</h1>
+      <p class="sub-hero-text">Long-Horizon Reasoning and Navigation with a Visuo-Spatial-Temporal Memory</p>
+
+      <div class="hero-pill-row">
+        <span class="hero-pill">Visual Embedding Memory</span>
+        <span class="hero-pill">Spatial-Temporal Retrieval</span>
+        <span class="hero-pill">Robot QA and Navigation</span>
+      </div>
+
+      <div class="authors">
+        <a href="https://yixun-hu.github.io/" target="_blank" rel="noopener">Yixun Hu</a><sup>*1</sup>,
+        <a href="https://zzcnewly.github.io/" target="_blank" rel="noopener">Zhicheng Zheng</a><sup>*1</sup>,
+        <a href="https://lihzha.github.io/" target="_blank" rel="noopener">Lihan Zha</a><sup>1</sup>,
+        <a href="https://xingcw.github.io/" target="_blank" rel="noopener">Chunwei Xing</a><sup>2</sup>,
+        <a href="https://www.linkedin.com/in/rajdeep1008/" target="_blank" rel="noopener">Rajdeep Singh</a><sup>2</sup>,
+        <a href="https://epicrider.github.io/" target="_blank" rel="noopener">Omar Hossain</a><sup>2</sup>,
+        <a href="https://antonilo.github.io/" target="_blank" rel="noopener">Antonio Loquercio</a><sup>2</sup>,
+        <a href="https://robodhruv.github.io/" target="_blank" rel="noopener">Dhruv Shah</a><sup>1</sup>
+        <span class="author-note">*Equal contribution</span>
+        <span class="affiliation"><sup>1</sup>Princeton University, <sup>2</sup>University of Pennsylvania</span>
+      </div>
+
+      <div class="hero-actions">
+        <a class="cta primary" href="#resources">Paper</a>
+        <a class="cta dark" href="#resources">arXiv</a>
+        <a class="cta ghost" href="#demos">Videos</a>
+        <a class="cta ghost" href="#resources">Code</a>
+      </div>
+
+      <div class="hero-waves" aria-hidden="true">
+        <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none"
+          shape-rendering="auto">
+          <defs>
+            <path id="gentle-wave"
+              d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18v44h-352z"></path>
+          </defs>
+          <g class="wave-parallax">
+            <use href="#gentle-wave" x="48" y="0" fill="rgba(14,165,233,0.22)"></use>
+            <use href="#gentle-wave" x="48" y="3" fill="rgba(20,184,166,0.18)"></use>
+            <use href="#gentle-wave" x="48" y="5" fill="rgba(37,99,235,0.16)"></use>
+            <use href="#gentle-wave" x="48" y="7" fill="rgba(15,23,42,0.16)"></use>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <section class="card-surface hero-media-card" aria-label="RAVEN overview video">
+      <video controls autoplay muted loop playsinline preload="metadata" poster="./static/images/teaser.jpg">
+        <source src="./static/videos/raven_pre.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </section>
+
+    <img src="./static/images/teaser.jpg" alt="RAVEN system overview" class="teaser-image">
+    <p class="figure-caption">
+      RAVEN leverages visual embeddings as a long-term memory for robotic question answering and navigation,
+      grounding retrieved observations in space and time.
+    </p>
+
+    <div class="tagline" id="abstract">Abstract</div>
+    <section class="card-surface content-card">
+      <p>
+        Long-term robot deployment requires a compact, scalable memory that preserves fine-grained visual semantics,
+        grounds observations in space and time, and enables efficient storage and retrieval.
+      </p>
+      <p>
+        In this paper, we propose <strong>RAVEN</strong> (RetrievAl via Visual Embeddings for Navigation), an agentic
+        system for long-horizon robotic question answering and navigation with visual memory. RAVEN stores visual
+        embeddings with pose and time in a vector database, and grounds retrieval in a spatial map to answer queries
+        with navigation goals. By operating directly on visual embeddings, RAVEN avoids lossy image-to-text translation
+        and enables accurate semantic, spatial, and temporal retrieval at scale.
+      </p>
+      <p>
+        We evaluate RAVEN on established NaVQA and FindingDory benchmarks, and on our RAVEN-QA benchmark, which
+        comprises web-sourced, simulated, and real-world videos with diverse question annotations. Across these
+        evaluations, RAVEN consistently outperforms the caption-based baseline. Finally, we demonstrate the practical
+        utility of RAVEN on a Unitree Go1 robot navigating real-world indoor environments.
+      </p>
+    </section>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">Embedding-native memory</div>
+        <p>Stores compact visual representations directly instead of relying on lossy frame captions.</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">Pose and time grounding</div>
+        <p>Indexes every memory with spatial pose and world-clock timestamp for precise retrieval.</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">Agentic tool use</div>
+        <p>Lets a VLM agent combine semantic, temporal, spatial, and image-based retrieval tools.</p>
+      </div>
+    </div>
+
+    <div class="tagline" id="method">Method: Visuo-Spatial-Temporal Memory</div>
+    <section class="card-surface content-card method-intro-card">
+      <p>
+        RAVEN operates in two phases: <strong>memory building during exploration</strong>, and <strong>memory
+        querying</strong> for grounded answers and navigation goals.
+      </p>
+    </section>
+    <img src="./static/images/pipeline.jpg" alt="RAVEN memory building and querying pipeline" class="wide-figure">
+
+    <section class="card-surface content-card method-caption-card">
+      <p>
+        During exploration, the robot encodes RGB frames directly into compact latent representations using a
+        pretrained multimodal encoder (e.g., CLIP, SigLIP, QQMM-v2). These embeddings are indexed alongside their
+        corresponding robot pose and world-clock timestamp in a vector database. This triplet memory structure
+        (visuo-spatial-temporal memory) allows for flexible retrieval queries based on semantic similarity, spatial
+        proximity, or temporal windows.
+      </p>
+    </section>
+
+    <section class="card-surface method-flow-card" aria-label="Interactive method pipeline">
+      <div class="method-flow-board">
+        <div class="method-flow-svg-area">
+          <svg id="method-flow-svg" class="method-flow-svg" viewBox="0 0 720 340" role="img"
+            aria-label="RAVEN method pipeline diagram">
+            <defs>
+              <marker id="method-arrow-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"></path>
+              </marker>
+              <marker id="method-arrow-head-active" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6"
+                markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#0ea5e9"></path>
+              </marker>
+            </defs>
+
+            <line class="method-arrow" data-edge="frames-encoder" x1="146" y1="105" x2="178" y2="105"
+              marker-end="url(#method-arrow-head)"></line>
+            <line class="method-arrow" data-edge="encoder-triplet" x1="316" y1="105" x2="348" y2="105"
+              marker-end="url(#method-arrow-head)"></line>
+            <line class="method-arrow" data-edge="triplet-database" x1="500" y1="105" x2="532" y2="105"
+              marker-end="url(#method-arrow-head)"></line>
+            <line class="method-arrow" data-edge="database-retrieve" x1="608" y1="142" x2="608" y2="190"
+              marker-end="url(#method-arrow-head)"></line>
+            <line class="method-arrow" data-edge="retrieve-semantic" x1="608" y1="232" x2="200" y2="278"
+              marker-end="url(#method-arrow-head)"></line>
+            <line class="method-arrow" data-edge="retrieve-spatial" x1="608" y1="232" x2="400" y2="278"
+              marker-end="url(#method-arrow-head)"></line>
+            <line class="method-arrow" data-edge="retrieve-temporal" x1="608" y1="232" x2="608" y2="278"
+              marker-end="url(#method-arrow-head)"></line>
+
+            <g class="method-stage" data-stage="frames" tabindex="0" role="button"
+              aria-label="RGB Frames stage">
+              <rect class="method-stage-rect" x="38" y="70" width="108" height="70" rx="14"></rect>
+              <text class="method-stage-emoji" x="92" y="100" text-anchor="middle">▢▢▢</text>
+              <text class="method-stage-label" x="92" y="125" text-anchor="middle">RGB Frames</text>
+            </g>
+
+            <g class="method-stage" data-stage="encoder" tabindex="0" role="button"
+              aria-label="Multimodal Encoder stage">
+              <rect class="method-stage-rect" x="178" y="70" width="138" height="70" rx="14"></rect>
+              <text class="method-stage-label" x="247" y="98" text-anchor="middle">Multimodal Encoder</text>
+              <text class="method-stage-sub" id="method-encoder-name" x="247" y="122" text-anchor="middle">CLIP</text>
+            </g>
+
+            <g class="method-stage" data-stage="triplet" tabindex="0" role="button"
+              aria-label="Triplet Memory stage">
+              <rect class="method-stage-rect" x="348" y="70" width="152" height="70" rx="14"></rect>
+              <text class="method-stage-label" x="424" y="95" text-anchor="middle">Triplet Memory</text>
+              <g class="method-stage-tokens">
+                <text x="378" y="124" text-anchor="middle" class="method-token method-token-vis">◆ vis</text>
+                <text x="424" y="124" text-anchor="middle" class="method-token method-token-pose">◉ pose</text>
+                <text x="474" y="124" text-anchor="middle" class="method-token method-token-time">◷ time</text>
+              </g>
+            </g>
+
+            <g class="method-stage" data-stage="database" tabindex="0" role="button"
+              aria-label="Vector Database stage">
+              <rect class="method-stage-rect" x="554" y="70" width="120" height="70" rx="14"></rect>
+              <ellipse class="method-db-ellipse" cx="614" cy="86" rx="22" ry="6"></ellipse>
+              <path class="method-db-body" d="M592 86 V112 a22 6 0 0 0 44 0 V86" fill="none"></path>
+              <ellipse class="method-db-ellipse" cx="614" cy="112" rx="22" ry="6"></ellipse>
+              <text class="method-stage-label" x="614" y="132" text-anchor="middle">Vector DB</text>
+            </g>
+
+            <g class="method-stage" data-stage="retrieve" tabindex="0" role="button"
+              aria-label="Retrieval queries stage">
+              <rect class="method-stage-rect" x="540" y="190" width="138" height="42" rx="12"></rect>
+              <text class="method-stage-label" x="608" y="217" text-anchor="middle">Retrieval Queries</text>
+            </g>
+
+            <g class="method-mode" data-stage="semantic" tabindex="0" role="button"
+              aria-label="Semantic similarity query mode">
+              <rect class="method-mode-rect" x="120" y="278" width="160" height="42" rx="12"></rect>
+              <text class="method-mode-label" x="200" y="305" text-anchor="middle">⊙ Semantic similarity</text>
+            </g>
+            <g class="method-mode" data-stage="spatial" tabindex="0" role="button"
+              aria-label="Spatial proximity query mode">
+              <rect class="method-mode-rect" x="320" y="278" width="160" height="42" rx="12"></rect>
+              <text class="method-mode-label" x="400" y="305" text-anchor="middle">◉ Spatial proximity</text>
+            </g>
+            <g class="method-mode" data-stage="temporal" tabindex="0" role="button"
+              aria-label="Temporal window query mode">
+              <rect class="method-mode-rect" x="528" y="278" width="160" height="42" rx="12"></rect>
+              <text class="method-mode-label" x="608" y="305" text-anchor="middle">◷ Temporal window</text>
+            </g>
+          </svg>
+        </div>
+        <aside class="method-flow-detail" id="method-flow-detail" aria-live="polite"></aside>
+      </div>
+    </section>
+
+    <section class="card-surface content-card tool-card">
+      <div class="section-heading">Retrieval Tools</div>
+      <p class="section-lead">RAVEN exposes four primitive memory operations to the querying agent.</p>
+      <div class="tool-grid">
+        <div><strong>Text-based retriever</strong><span>Queries memory using text embeddings from an agent-generated query.</span></div>
+        <div><strong>Time-based retriever</strong><span>Returns consecutive memories starting from a queried timestamp.</span></div>
+        <div><strong>Position-based retriever</strong><span>Finds memory entries spatially closest to a queried location.</span></div>
+        <div><strong>Image-based retriever</strong><span>Retrieves memories from image queries.</span></div>
+      </div>
+    </section>
+
+    <div class="tagline" id="results">Benchmark Results</div>
+    <section class="card-surface benchmark-section" aria-labelledby="benchmark-heading">
+      <div class="benchmark-intro">
+        <div class="section-heading" id="benchmark-heading">RAVEN-QA, FindingDory, and NaVQA</div>
+        <p class="section-lead">
+          We evaluate RAVEN on three benchmarks. Hover any bar to inspect the exact value, and switch tabs to compare
+          across benchmarks.
+        </p>
+      </div>
+
+      <div class="benchmark-tabs" role="tablist" id="benchmark-tabs">
+        <button type="button" class="benchmark-tab active" data-benchmark="raven-qa" role="tab"
+          aria-selected="true">RAVEN-QA</button>
+        <button type="button" class="benchmark-tab" data-benchmark="findingdory" role="tab"
+          aria-selected="false">FindingDory</button>
+        <button type="button" class="benchmark-tab" data-benchmark="navqa" role="tab"
+          aria-selected="false">NaVQA</button>
+      </div>
+
+      <div class="benchmark-board">
+        <div class="benchmark-chart-area">
+          <div class="benchmark-chart-mount" id="benchmark-chart-mount"></div>
+          <div class="benchmark-floating-tip" id="benchmark-floating-tip" aria-hidden="true"></div>
+        </div>
+        <aside class="benchmark-readout" id="benchmark-readout" aria-live="polite"></aside>
+      </div>
+
+      <div class="benchmark-legend" aria-label="Method legend">
+        <span class="legend-pill"><span class="legend-swatch" data-method="Embedder Only"></span>Embedder Only</span>
+        <span class="legend-pill"><span class="legend-swatch" data-method="ReMEmbR"></span>ReMEmbR</span>
+        <span class="legend-pill"><span class="legend-swatch" data-method="VLM Only"></span>VLM Only</span>
+        <span class="legend-pill ours"><span class="legend-swatch" data-method="Ours"></span>Ours (RAVEN)</span>
+      </div>
+
+      <p class="benchmark-commentary" id="benchmark-commentary"></p>
+    </section>
+
+    <div class="tagline" id="deployment">Real-World Deployment Results</div>
+    <section class="card-surface deployment-card" aria-labelledby="deployment-heading">
+      <div class="section-heading" id="deployment-heading">Unitree Go1 Indoor Navigation</div>
+      <p>
+        We deploy RAVEN on a Unitree Go1 quadruped robot across four real-world indoor environments. The qualitative
+        results compare RAVEN with ReMEmbR and VLM-only baselines on dominant objects, secondary objects,
+        reasoning-based queries, and information recall.
+      </p>
+
+      <div class="deployment-environments" id="deployment-environments" aria-label="Deployment environments">
+      </div>
+
+      <div class="deployment-filters" id="deployment-filters" role="tablist"
+        aria-label="Filter deployment results by environment"></div>
+
+      <article class="deployment-detail" id="deployment-detail" aria-live="polite">
+        <div class="deployment-detail-figure">
+          <img id="deployment-detail-img" alt="" decoding="async">
+          <span class="deployment-detail-query" id="deployment-detail-query"></span>
+        </div>
+        <aside class="deployment-detail-info">
+          <span class="deployment-detail-eyebrow" id="deployment-detail-eyebrow">Lab 1 · Example 1 of 5</span>
+          <h3 class="deployment-detail-title" id="deployment-detail-title">Safety Cones</h3>
+          <p class="deployment-detail-lead" id="deployment-detail-lead"></p>
+          <div class="deployment-detail-status" id="deployment-detail-status"></div>
+        </aside>
+      </article>
+
+      <div class="deployment-gallery" id="deployment-gallery" role="list"
+        aria-label="Robot rollout gallery"></div>
+    </section>
+
+    <div class="tagline" id="demos">Demo Videos</div>
+    <section class="card-surface demo-section">
+      <div class="section-heading">Exploration and Retrieval Rollouts</div>
+      <p class="section-lead">Sample RAVEN robot rollouts across exploration and query-driven retrieval.</p>
+      <div class="demo-grid">
+        <article class="demo-card">
+          <div class="demo-label">IRoM - Exploration</div>
+          <video controls autoplay muted loop playsinline preload="metadata"
+            poster="./static/images/posters/IRoM_exploration_3_3x.jpg">
+            <source src="./static/videos/IRoM_exploration_3_3x.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-          <!-- Teaser Image -->
-          <img src="./static/images/teaser.jpg" alt="RAVEN Overview" style="width: 100%;">
-          <h2 class="subtitle has-text-centered">
-            <span class="dnerf">RAVEN</span> leverages visual embeddings as a long-term memory for robotic question answering and navigation.
-          </h2>
-        </div>
+        </article>
+        <article class="demo-card">
+          <div class="demo-label">IRoM - Retrieval</div>
+          <video controls autoplay muted loop playsinline preload="metadata"
+            poster="./static/images/posters/IRoM_retrieval_v3_1_3x.jpg">
+            <source src="./static/videos/IRoM_retrieval_v3_1_3x.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </article>
+        <article class="demo-card">
+          <div class="demo-label">Bowen Hall - Exploration</div>
+          <video controls autoplay muted loop playsinline preload="metadata"
+            poster="./static/images/posters/bowen_hall_exploration_3x.jpg">
+            <source src="./static/videos/bowen_hall_exploration_3x.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </article>
+        <article class="demo-card">
+          <div class="demo-label">Bowen Hall - Retrieval</div>
+          <video controls autoplay muted loop playsinline preload="metadata"
+            poster="./static/images/posters/bowen_hall_raven_retrieval_3x.jpg">
+            <source src="./static/videos/bowen_hall_raven_retrieval_3x.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </article>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Abstract. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <p>
-            Long-term robot deployment requires a compact, scalable memory that preserves fine-grained visual semantics, 
-            grounds observations in space and time, and enables efficient storage and retrieval.
-          </p>
-          <p>
-            In this paper, we propose <span class="dnerf">RAVEN</span> (RetrievAl via Visual Embeddings for Navigation), 
-            an agentic system for long-horizon robotic question answering and navigation with visual memory. 
-            RAVEN stores visual embeddings with pose and time in a vector database, and grounds retrieval in a spatial map 
-            to answer queries with navigation goals. By operating directly on visual embeddings, RAVEN avoids lossy 
-            image-to-text translation and enables accurate semantic, spatial, and temporal retrieval at scale.
-          </p>
-          <p>
-            We evaluate RAVEN on established NaVQA and FindingDory benchmarks, and on our RAVEN-QA benchmark, 
-            which comprises web-sourced, simulated, and real-world videos with diverse question annotations. 
-            Across these evaluations, RAVEN consistently outperforms the caption-based baseline. 
-            Finally, we demonstrate the practical utility of RAVEN on a Unitree Go1 robot navigating real-world indoor environments.
-          </p>
-        </div>
+    <div class="tagline" id="resources">Resources</div>
+    <section class="card-surface resources-card">
+      <div class="resources-grid">
+        <article class="resource-item">
+          <div class="resource-icon" aria-hidden="true">PDF</div>
+          <h3>Paper</h3>
+          <p>The paper link is currently a placeholder, matching the prior site state.</p>
+          <span class="resource-coming-soon">Coming soon</span>
+        </article>
+        <article class="resource-item">
+          <div class="resource-icon" aria-hidden="true">arXiv</div>
+          <h3>arXiv</h3>
+          <p>The arXiv link is currently a placeholder, matching the prior site state.</p>
+          <span class="resource-coming-soon">Coming soon</span>
+        </article>
+        <article class="resource-item">
+          <div class="resource-icon" aria-hidden="true">Git</div>
+          <h3>Code</h3>
+          <p>The code release link is currently a placeholder, matching the prior site state.</p>
+          <span class="resource-coming-soon">Coming soon</span>
+        </article>
       </div>
-    </div>
-    <!--/ Abstract. -->
+    </section>
 
-    <!-- Paper video. -->
-    <!-- TODO: Uncomment and update when video is available
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Video</h2>
-        <div class="publication-video">
-          <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID?rel=0&amp;showinfo=0"
-                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-    -->
-    <!--/ Paper video. -->
-  </div>
-</section>
-
-
-<section class="section">
-  <div class="container is-max-desktop">
-
-    <!-- Method Overview. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Method</h2>
-
-        <!-- Pipeline Figure -->
-        <div class="content">
-          <img src="./static/images/pipeline.jpg" alt="RAVEN Pipeline" style="width: 100%; margin-bottom: 1.5rem;">
-        </div>
-
-        <div class="content has-text-justified">
-          <p>
-            RAVEN operates in two phases: <strong>Memory Building</strong> and <strong>Memory Querying</strong>.
-          </p>
-        </div>
-
-        <!-- Memory Building -->
-        <h3 class="title is-4">Phase I: Memory Building</h3>
-        <div class="content has-text-justified">
-          <p>
-            During exploration, the robot encodes RGB frames directly into compact latent representations using a 
-            pretrained multimodal encoder (e.g., CLIP, SigLIP, QQMM-v2). These embeddings are indexed alongside 
-            their corresponding robot pose and world-clock timestamp in a vector database. This triplet memory 
-            structure (visuo-spatial-temporal memory) allows for flexible retrieval queries based on semantic 
-            similarity, spatial proximity, or temporal windows.
-          </p>
-        </div>
-
-        <!-- Memory Querying -->
-        <h3 class="title is-4">Phase II: Memory Querying</h3>
-        <div class="content has-text-justified">
-          <p>
-            At query time, a VLM-based agent iteratively invokes function tools to retrieve top-k relevant memory 
-            entries and generates answers. RAVEN provides four primitive retrieval tools:
-          </p>
-          <ul>
-            <li><strong>Text-based retriever:</strong> Queries memory using text embeddings derived from an agent-generated query.</li>
-            <li><strong>Time-based retriever:</strong> Returns consecutive memories starting from a queried timestamp.</li>
-            <li><strong>Position-based retriever:</strong> Finds memory entries spatially closest to a queried location.</li>
-            <li><strong>Image-based retriever:</strong> Performs retrieval based on image queries.</li>
-          </ul>
-          <p>
-            The robot can further guide the user to the predicted answer location by navigation with a trajectory planner.
-          </p>
-        </div>
-
-      </div>
-    </div>
-    <!--/ Method Overview. -->
-
-  </div>
-</section>
-
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Benchmark Results. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Benchmark Results</h2>
-      </div>
-    </div>
-
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <div class="columns is-vcentered">
-          <!-- Left: Text -->
-          <div class="column is-half">
-            <div class="content has-text-justified">
-              <p>
-                We evaluate RAVEN on three benchmarks: <strong>RAVEN-QA</strong>, <strong>FindingDory</strong>, and <strong>NaVQA</strong>.
-              </p>
-              <p>
-                <strong>(a) RAVEN-QA:</strong> Our benchmark comprises real-world robot deployments, Habitat simulations, 
-                and human-ego videos with simple/hard query splits. RAVEN consistently outperforms all baselines, 
-                achieving up to 92.4% on real robot deployment tasks.
-              </p>
-              <p>
-                <strong>(b) FindingDory:</strong> On this memory-based navigation benchmark, RAVEN achieves higher success rates 
-                while maintaining 10× better memory efficiency compared to VLM Only approaches.
-              </p>
-              <p>
-                <strong>(c) NaVQA:</strong> RAVEN demonstrates strong performance on descriptive, positional, and temporal 
-                accuracy metrics, outperforming caption-based methods like ReMEmbR.
-              </p>
-            </div>
-          </div>
-          <!-- Right: Figure -->
-          <div class="column is-half">
-            <div class="content has-text-centered">
-              <img src="./static/images/raven_findingdory_navqa.jpg" alt="Benchmark Results" style="width: 100%;">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--/ Benchmark Results. -->
-  </div>
-</section>
-
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Results. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Real-World Deployment Results</h2>
-        <div class="content has-text-justified">
-          <p>
-            We deploy RAVEN on a Unitree Go1 quadruped robot across four real-world indoor environments. 
-            The figure below shows qualitative results comparing RAVEN with ReMEmbR and VLM Only baselines 
-            on diverse query types including dominant objects, secondary objects, reasoning-based queries, and information recall.
-          </p>
-        </div>
-        <!-- Rollout Figure -->
-        <div class="content">
-          <img src="./static/images/rollout.jpg" alt="Real-World Rollout Results" style="width: 100%;">
-        </div>
-      </div>
-    </div>
-    <!--/ Results. -->
-  </div>
-</section>
-
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Demo Videos. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Demo Videos</h2>
-      </div>
-    </div>
-
-    <div class="columns is-centered">
-      <div class="column is-four-fifths">
-        <div class="columns">
-          <!-- Video 1: Exploration -->
-          <div class="column is-half">
-            <div class="content has-text-centered">
-              <h3 class="title is-5">Exploration</h3>
-              <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
-                <source src="./static/videos/IRoM_exploration_3_3x.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          </div>
-          <!-- Video 2: Retrieval -->
-          <div class="column is-half">
-            <div class="content has-text-centered">
-              <h3 class="title is-5">Retrieval</h3>
-              <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
-                <source src="./static/videos/IRoM_retrieval_v3_1_3x.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          </div>
-        </div>
-        <div class="columns">
-          <!-- Video 1: Exploration -->
-          <div class="column is-half">
-            <div class="content has-text-centered">
-              <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
-                <source src="./static/videos/bowen_hall_exploration_3x.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          </div>
-          <!-- Video 2: Retrieval -->
-          <div class="column is-half">
-            <div class="content has-text-centered">
-              <video controls playsinline preload="metadata" style="width: 100%; border-radius: 8px;">
-                <source src="./static/videos/bowen_hall_raven_retrieval_3x.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--/ Demo Videos. -->
-  </div>
-</section>
-
-
-<section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
-    <h2 class="title">BibTeX</h2>
-    <pre><code>@article{raven2025,
+    <div class="tagline" id="bibtex">BibTeX</div>
+    <section class="bibtex-code">
+      <div class="bibtex-title">Reference</div>
+      <pre><code>@article{raven2025,
   title     = {RAVEN: Long-Horizon Reasoning and Navigation with a Visuo-Spatial-Temporal Memory},
   author    = {Anonymous Authors},
   journal   = {arXiv preprint},
   year      = {2025},
 }</code></pre>
-  </div>
-</section>
+    </section>
+  </main>
 
+  <footer class="footer">
+    Website adapted from the <a href="https://github.com/polaris-evals/polaris-evals.github.io" target="_blank"
+      rel="noopener">PolaRiS template</a>.
+  </footer>
 
-<footer class="footer">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-          <p>
-            This website is licensed under a <a rel="license"
-                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-          <p>
-            Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const progressItems = document.querySelectorAll('.progress-item');
+      const progressLineFill = document.querySelector('.progress-line-fill');
+      const progressTrack = document.querySelector('.progress-track');
 
+      const sections = [];
+      progressItems.forEach((item) => {
+        const id = item.dataset.section;
+        const el = id === 'hero' ? document.querySelector('.hero-flow') : document.getElementById(id);
+        if (el) sections.push({ id, el });
+      });
+
+      const updateProgress = () => {
+        if (!sections.length) return;
+
+        const activationThreshold = window.innerHeight * 0.35;
+        let activeIdx = 0;
+        for (let idx = 0; idx < sections.length; idx += 1) {
+          if (sections[idx].el.getBoundingClientRect().top <= activationThreshold) {
+            activeIdx = idx;
+          } else {
+            break;
+          }
+        }
+
+        if (progressLineFill && progressTrack) {
+          const maxFillHeight = progressTrack.offsetHeight - 44;
+          const fillHeight = (activeIdx / Math.max(sections.length - 1, 1)) * maxFillHeight;
+          progressLineFill.style.height = `${Math.min(Math.max(fillHeight, 0), maxFillHeight)}px`;
+        }
+
+        progressItems.forEach((item) => {
+          const sectionIdx = sections.findIndex((section) => section.id === item.dataset.section);
+          item.classList.remove('active', 'passed');
+          if (sectionIdx === activeIdx) item.classList.add('active');
+          if (sectionIdx >= 0 && sectionIdx < activeIdx) item.classList.add('passed');
+        });
+      };
+
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const flowSvg = document.getElementById('method-flow-svg');
+      const detailPanel = document.getElementById('method-flow-detail');
+      const encoderNameEl = document.getElementById('method-encoder-name');
+      if (!flowSvg || !detailPanel) return;
+
+      const stageInfo = {
+        frames: {
+          eyebrow: 'Phase I · Capture',
+          title: 'RGB Frames',
+          text: 'During exploration, the robot continuously streams RGB frames. Every frame is captured with its associated robot pose and a world-clock timestamp so that the raw sensor stream is already grounded in space and time.'
+        },
+        encoder: {
+          eyebrow: 'Phase I · Encode',
+          title: 'Multimodal Encoder',
+          text: 'A pretrained multimodal encoder (CLIP, SigLIP, or QQMM-v2) maps each frame directly into a compact latent embedding. RAVEN never converts frames to text, so fine-grained visual semantics are preserved end-to-end.'
+        },
+        triplet: {
+          eyebrow: 'Phase I · Bind',
+          title: 'Triplet Memory',
+          text: 'The visual embedding, the robot pose at capture, and the world-clock timestamp are bundled into a single record — a visuo-spatial-temporal triplet that supports lookup along any of the three axes.'
+        },
+        database: {
+          eyebrow: 'Phase I · Index',
+          title: 'Vector Database',
+          text: 'All triplets are indexed in a vector database. Embedding-similarity queries run as fast nearest-neighbour search; pose and time live as structured fields that filter or sort the results.'
+        },
+        retrieve: {
+          eyebrow: 'Phase II · Query',
+          title: 'Retrieval Queries',
+          text: 'At query time the agent issues semantic, spatial, or temporal queries (or composes them) against the index. Retrieved triplets carry both the source frame and the place-and-time it came from.'
+        },
+        semantic: {
+          eyebrow: 'Retrieval mode',
+          title: 'Semantic similarity',
+          text: 'The agent embeds a text or image query and returns triplets whose visual embeddings are nearest in the latent space — useful for "find anything that looks like X" questions.'
+        },
+        spatial: {
+          eyebrow: 'Retrieval mode',
+          title: 'Spatial proximity',
+          text: 'Queries are filtered by robot pose: return triplets captured within a region or radius — useful for "what was near this location" questions and grounding navigation goals.'
+        },
+        temporal: {
+          eyebrow: 'Retrieval mode',
+          title: 'Temporal window',
+          text: 'Queries are bounded by world-clock time: return triplets captured inside a time window or sequence — useful for "what happened before / after / while" questions.'
+        }
+      };
+
+      const idleDetail = {
+        eyebrow: 'Visuo-Spatial-Temporal Memory',
+        title: 'Hover any stage',
+        text: 'Move over a node in the diagram to inspect that step of the RAVEN pipeline. The lower row shows the three retrieval modes the agent can compose at query time.'
+      };
+
+      const renderDetail = (info) => {
+        detailPanel.replaceChildren();
+        const eyebrow = document.createElement('div');
+        eyebrow.className = 'method-flow-eyebrow';
+        eyebrow.textContent = info.eyebrow;
+
+        const title = document.createElement('div');
+        title.className = 'method-flow-title';
+        title.textContent = info.title;
+
+        const text = document.createElement('p');
+        text.className = 'method-flow-text';
+        text.textContent = info.text;
+
+        detailPanel.append(eyebrow, title, text);
+      };
+
+      renderDetail(idleDetail);
+
+      const allInteractive = flowSvg.querySelectorAll('.method-stage, .method-mode');
+      const allEdges = flowSvg.querySelectorAll('.method-arrow');
+
+      const stageEdges = {
+        frames: ['frames-encoder'],
+        encoder: ['frames-encoder', 'encoder-triplet'],
+        triplet: ['encoder-triplet', 'triplet-database'],
+        database: ['triplet-database', 'database-retrieve'],
+        retrieve: ['database-retrieve', 'retrieve-semantic', 'retrieve-spatial', 'retrieve-temporal'],
+        semantic: ['retrieve-semantic'],
+        spatial: ['retrieve-spatial'],
+        temporal: ['retrieve-temporal']
+      };
+
+      const clearActive = () => {
+        allInteractive.forEach((node) => node.classList.remove('is-active'));
+        allEdges.forEach((edge) => {
+          edge.classList.remove('is-active');
+          edge.setAttribute('marker-end', 'url(#method-arrow-head)');
+        });
+      };
+
+      const activate = (stageId) => {
+        clearActive();
+        const node = flowSvg.querySelector(`[data-stage="${stageId}"]`);
+        if (node) node.classList.add('is-active');
+        (stageEdges[stageId] || []).forEach((edgeId) => {
+          const edge = flowSvg.querySelector(`[data-edge="${edgeId}"]`);
+          if (edge) {
+            edge.classList.add('is-active');
+            edge.setAttribute('marker-end', 'url(#method-arrow-head-active)');
+          }
+        });
+        renderDetail(stageInfo[stageId] || idleDetail);
+      };
+
+      const reset = () => {
+        clearActive();
+        renderDetail(idleDetail);
+      };
+
+      allInteractive.forEach((node) => {
+        const id = node.dataset.stage;
+        node.addEventListener('mouseenter', () => activate(id));
+        node.addEventListener('focus', () => activate(id));
+        node.addEventListener('click', () => activate(id));
+        node.addEventListener('mouseleave', reset);
+        node.addEventListener('blur', reset);
+      });
+
+      if (encoderNameEl) {
+        const encoderNames = ['CLIP', 'SigLIP', 'QQMM-v2'];
+        let encoderIdx = 0;
+        setInterval(() => {
+          encoderIdx = (encoderIdx + 1) % encoderNames.length;
+          encoderNameEl.textContent = encoderNames[encoderIdx];
+        }, 1800);
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabBar = document.getElementById('benchmark-tabs');
+      const mount = document.getElementById('benchmark-chart-mount');
+      const readout = document.getElementById('benchmark-readout');
+      const tooltip = document.getElementById('benchmark-floating-tip');
+      const commentary = document.getElementById('benchmark-commentary');
+      if (!tabBar || !mount || !readout || !tooltip || !commentary) return;
+
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+      const METHODS = ['Embedder Only', 'ReMEmbR', 'VLM Only', 'Ours'];
+      const METHOD_COLORS = {
+        'Embedder Only': '#94a3b8',
+        'ReMEmbR': '#a78bfa',
+        'VLM Only': '#f59e0b',
+        'Ours': '#0ea5e9'
+      };
+
+      document.querySelectorAll('.legend-swatch').forEach((node) => {
+        const method = node.getAttribute('data-method');
+        if (method && METHOD_COLORS[method]) node.style.background = METHOD_COLORS[method];
+      });
+
+      const benchmarks = {
+        'raven-qa': {
+          name: 'RAVEN-QA',
+          commentary: 'Our benchmark spans Habitat simulations, real robot deployments, and human-ego videos with simple and hard query splits. RAVEN tops every split, reaching 92.4% on real robot deployment.',
+          panels: [{
+            title: 'Accuracy (%)',
+            yMax: 100,
+            unit: '%',
+            categories: [
+              { name: 'Habitat Sim',         values: { 'Embedder Only': 61.8, 'ReMEmbR': 55.0, 'VLM Only': 76.7, 'Ours': 80.5 } },
+              { name: 'Real Robot',          values: { 'Embedder Only': 66.7, 'ReMEmbR': 76.7, 'VLM Only': 85.2, 'Ours': 92.4 } },
+              { name: 'Human-Ego (Simple)',  values: { 'Embedder Only': 90.7, 'ReMEmbR': 92.6, 'VLM Only': 96.3, 'Ours': 96.3 } },
+              { name: 'Human-Ego (Hard)',    values: { 'Embedder Only': 63.4, 'ReMEmbR': 58.5, 'VLM Only': 78.0, 'Ours': 82.9 } },
+              { name: 'Average',             values: { 'Embedder Only': 70.6, 'ReMEmbR': 70.7, 'VLM Only': 84.0, 'Ours': 88.0 } }
+            ]
+          }]
+        },
+        'findingdory': {
+          name: 'FindingDory',
+          commentary: 'Memory-based navigation: RAVEN matches or exceeds VLM-Only success while using 10× less memory at long horizons.',
+          panels: [
+            {
+              title: 'Success Rate (%)',
+              yMax: 50,
+              unit: '%',
+              categories: [
+                { name: 'High-Level (Long)',    values: { 'Embedder Only': 18.8, 'ReMEmbR': 25.0, 'VLM Only': 28.2, 'Ours': 32.2 } },
+                { name: 'High-Level (Overall)', values: { 'Embedder Only': 21.5, 'ReMEmbR': 27.3, 'VLM Only': 38.2, 'Ours': 35.1 } },
+                { name: 'Average',              values: { 'Embedder Only': 20.1, 'ReMEmbR': 26.1, 'VLM Only': 33.2, 'Ours': 33.7 } }
+              ]
+            },
+            {
+              title: 'Memory Efficiency (× over VLM Only, higher is better)',
+              yMax: 16,
+              unit: '×',
+              categories: [
+                { name: 'Long',    values: { 'Embedder Only': null, 'ReMEmbR': 9.0, 'VLM Only': 1.0, 'Ours': 13.5 } },
+                { name: 'Overall', values: { 'Embedder Only': null, 'ReMEmbR': 6.1, 'VLM Only': 1.0, 'Ours': 10.0 } }
+              ]
+            }
+          ]
+        },
+        'navqa': {
+          name: 'NaVQA',
+          commentary: 'On open-vocabulary visual QA, RAVEN matches the strongest VLM baseline on every axis while operating directly on memory embeddings instead of frame captions.',
+          panels: [{
+            title: 'Accuracy (%)',
+            yMax: 100,
+            unit: '%',
+            categories: [
+              { name: 'Overall',     values: { 'Embedder Only': null, 'ReMEmbR': 74.3, 'VLM Only': 75.2, 'Ours': 75.2 } },
+              { name: 'Descriptive', values: { 'Embedder Only': null, 'ReMEmbR': 71.0, 'VLM Only': 68.0, 'Ours': 68.0 } },
+              { name: 'Positional',  values: { 'Embedder Only': null, 'ReMEmbR': 71.8, 'VLM Only': 78.9, 'Ours': 78.9 } },
+              { name: 'Temporal',    values: { 'Embedder Only': null, 'ReMEmbR': 87.2, 'VLM Only': 87.2, 'Ours': 87.2 } },
+              { name: 'Average',     values: { 'Embedder Only': null, 'ReMEmbR': 76.1, 'VLM Only': 77.3, 'Ours': 77.3 } }
+            ]
+          }]
+        }
+      };
+
+      const formatValue = (value, unit) => {
+        if (value === null || value === undefined) return 'N/A';
+        const fixed = Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1);
+        return `${fixed}${unit}`;
+      };
+
+      const buildPanel = (panel, benchmarkName) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'benchmark-panel';
+
+        const heading = document.createElement('div');
+        heading.className = 'benchmark-panel-title';
+        heading.textContent = panel.title;
+        wrapper.appendChild(heading);
+
+        const numCats = panel.categories.length;
+        const padLeft = 56;
+        const padRight = 18;
+        const padTop = 22;
+        const padBottom = 58;
+        const innerW = 720 - padLeft - padRight;
+        const innerH = 280 - padTop - padBottom;
+        const groupW = innerW / numCats;
+        const barW = Math.min(28, (groupW - 16) / METHODS.length);
+        const barGap = 4;
+
+        const svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute('viewBox', '0 0 720 280');
+        svg.setAttribute('class', 'benchmark-svg');
+        svg.setAttribute('role', 'img');
+        svg.setAttribute('aria-label', `${benchmarkName} ${panel.title}`);
+
+        const ticks = 5;
+        const tickStep = panel.yMax / ticks;
+        for (let t = 0; t <= ticks; t += 1) {
+          const tickValue = tickStep * t;
+          const y = padTop + innerH - (tickValue / panel.yMax) * innerH;
+
+          const grid = document.createElementNS(SVG_NS, 'line');
+          grid.setAttribute('x1', padLeft);
+          grid.setAttribute('x2', padLeft + innerW);
+          grid.setAttribute('y1', y);
+          grid.setAttribute('y2', y);
+          grid.setAttribute('class', t === 0 ? 'benchmark-axis' : 'benchmark-grid');
+          svg.appendChild(grid);
+
+          const label = document.createElementNS(SVG_NS, 'text');
+          label.setAttribute('x', padLeft - 10);
+          label.setAttribute('y', y + 4);
+          label.setAttribute('class', 'benchmark-tick-label');
+          label.setAttribute('text-anchor', 'end');
+          label.textContent = `${Number.isInteger(tickValue) ? tickValue : tickValue.toFixed(0)}${panel.unit}`;
+          svg.appendChild(label);
+        }
+
+        panel.categories.forEach((category, catIdx) => {
+          const groupX = padLeft + catIdx * groupW;
+          const totalBarsW = METHODS.length * barW + (METHODS.length - 1) * barGap;
+          const startX = groupX + (groupW - totalBarsW) / 2;
+
+          const groupHit = document.createElementNS(SVG_NS, 'rect');
+          groupHit.setAttribute('x', groupX + 2);
+          groupHit.setAttribute('y', padTop);
+          groupHit.setAttribute('width', Math.max(groupW - 4, 1));
+          groupHit.setAttribute('height', innerH);
+          groupHit.setAttribute('class', 'benchmark-group-hit');
+          svg.appendChild(groupHit);
+
+          METHODS.forEach((method, methodIdx) => {
+            const value = category.values[method];
+            const barX = startX + methodIdx * (barW + barGap);
+
+            if (value === null || value === undefined) {
+              const naLabel = document.createElementNS(SVG_NS, 'text');
+              naLabel.setAttribute('x', barX + barW / 2);
+              naLabel.setAttribute('y', padTop + innerH - 6);
+              naLabel.setAttribute('class', 'benchmark-na-label');
+              naLabel.setAttribute('text-anchor', 'middle');
+              naLabel.textContent = '—';
+              svg.appendChild(naLabel);
+              return;
+            }
+
+            const barH = Math.max((value / panel.yMax) * innerH, 1.5);
+            const barY = padTop + innerH - barH;
+
+            const bar = document.createElementNS(SVG_NS, 'rect');
+            bar.setAttribute('x', barX);
+            bar.setAttribute('y', padTop + innerH);
+            bar.setAttribute('width', barW);
+            bar.setAttribute('height', 0);
+            bar.setAttribute('rx', 3);
+            bar.setAttribute('class', `benchmark-bar${method === 'Ours' ? ' is-ours' : ''}`);
+            bar.setAttribute('fill', METHOD_COLORS[method]);
+            bar.dataset.method = method;
+            bar.dataset.category = category.name;
+            svg.appendChild(bar);
+
+            requestAnimationFrame(() => {
+              bar.style.transition = `y 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) ${methodIdx * 50 + catIdx * 30}ms, height 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) ${methodIdx * 50 + catIdx * 30}ms`;
+              bar.setAttribute('y', barY);
+              bar.setAttribute('height', barH);
+            });
+
+            const valueLabel = document.createElementNS(SVG_NS, 'text');
+            valueLabel.setAttribute('x', barX + barW / 2);
+            valueLabel.setAttribute('y', barY - 5);
+            valueLabel.setAttribute('class', method === 'Ours' ? 'benchmark-bar-value is-ours' : 'benchmark-bar-value');
+            valueLabel.setAttribute('text-anchor', 'middle');
+            valueLabel.textContent = formatValue(value, panel.unit);
+            svg.appendChild(valueLabel);
+          });
+
+          const catLabel = document.createElementNS(SVG_NS, 'text');
+          catLabel.setAttribute('x', groupX + groupW / 2);
+          catLabel.setAttribute('y', padTop + innerH + 22);
+          catLabel.setAttribute('class', 'benchmark-cat-label');
+          catLabel.setAttribute('text-anchor', 'middle');
+          catLabel.textContent = category.name;
+          svg.appendChild(catLabel);
+
+          const activateGroup = (event) => {
+            svg.querySelectorAll('.benchmark-group-hit.is-active').forEach((node) => node.classList.remove('is-active'));
+            svg.querySelectorAll('.benchmark-bar.dim').forEach((node) => node.classList.remove('dim'));
+            svg.querySelectorAll('.benchmark-bar').forEach((node) => {
+              if (node.dataset.category !== category.name) node.classList.add('dim');
+            });
+            groupHit.classList.add('is-active');
+            renderReadout(benchmarkName, panel, category);
+            showTooltip(category, panel);
+            moveTooltip(event);
+          };
+
+          const deactivateGroup = () => {
+            groupHit.classList.remove('is-active');
+            svg.querySelectorAll('.benchmark-bar.dim').forEach((node) => node.classList.remove('dim'));
+            tooltip.classList.remove('visible');
+            tooltip.setAttribute('aria-hidden', 'true');
+          };
+
+          groupHit.addEventListener('mouseenter', activateGroup);
+          groupHit.addEventListener('mousemove', moveTooltip);
+          groupHit.addEventListener('mouseleave', deactivateGroup);
+          groupHit.addEventListener('click', activateGroup);
+        });
+
+        wrapper.appendChild(svg);
+        return wrapper;
+      };
+
+      const buildHeader = (eyebrowText, titleText) => {
+        const header = document.createElement('div');
+        header.className = 'benchmark-readout-header';
+
+        const eyebrow = document.createElement('div');
+        eyebrow.className = 'benchmark-readout-eyebrow';
+        eyebrow.textContent = eyebrowText;
+
+        const title = document.createElement('div');
+        title.className = 'benchmark-readout-title';
+        title.textContent = titleText;
+
+        header.append(eyebrow, title);
+        return header;
+      };
+
+      const renderReadout = (benchmarkName, panel, category) => {
+        readout.replaceChildren();
+        readout.append(buildHeader(`${benchmarkName} · ${panel.title}`, category.name));
+
+        const grid = document.createElement('div');
+        grid.className = 'benchmark-readout-grid';
+        const numericValues = METHODS.map((m) => category.values[m]).filter((v) => v !== null && v !== undefined);
+        const best = numericValues.length ? Math.max(...numericValues) : null;
+
+        METHODS.forEach((method) => {
+          const value = category.values[method];
+          const row = document.createElement('div');
+          row.className = `benchmark-readout-row${method === 'Ours' ? ' is-ours' : ''}`;
+          if (best !== null && value === best) row.classList.add('is-best');
+
+          const swatch = document.createElement('span');
+          swatch.className = 'benchmark-readout-swatch';
+          swatch.style.background = METHOD_COLORS[method];
+
+          const methodEl = document.createElement('span');
+          methodEl.className = 'benchmark-readout-method';
+          methodEl.textContent = method;
+
+          const valueEl = document.createElement('strong');
+          valueEl.className = 'benchmark-readout-value';
+          valueEl.textContent = formatValue(value, panel.unit);
+
+          row.append(swatch, methodEl, valueEl);
+          grid.append(row);
+        });
+
+        readout.append(grid);
+      };
+
+      const renderIdleReadout = (benchmark) => {
+        readout.replaceChildren();
+        readout.append(buildHeader(benchmark.name, 'Hover any bar group'));
+
+        const lead = document.createElement('p');
+        lead.className = 'benchmark-readout-lead';
+        lead.textContent = 'Move over a category to see all four method scores side by side. The best result in each category is highlighted.';
+
+        readout.append(lead);
+      };
+
+      const showTooltip = (category, panel) => {
+        tooltip.replaceChildren();
+
+        const title = document.createElement('strong');
+        title.textContent = category.name;
+        tooltip.append(title);
+
+        const sub = document.createElement('span');
+        sub.className = 'benchmark-floating-tip-sub';
+        sub.textContent = panel.title;
+        tooltip.append(sub);
+
+        const numericValues = METHODS
+          .map((m) => category.values[m])
+          .filter((v) => v !== null && v !== undefined);
+        const best = numericValues.length ? Math.max(...numericValues) : null;
+
+        const list = document.createElement('div');
+        list.className = 'benchmark-floating-tip-list';
+
+        METHODS.forEach((method) => {
+          const value = category.values[method];
+          const row = document.createElement('div');
+          row.className = 'benchmark-floating-tip-row';
+          if (method === 'Ours') row.classList.add('is-ours');
+          if (best !== null && value === best) row.classList.add('is-best');
+
+          const swatch = document.createElement('span');
+          swatch.className = 'benchmark-floating-tip-swatch';
+          swatch.style.background = METHOD_COLORS[method];
+
+          const methodEl = document.createElement('span');
+          methodEl.className = 'benchmark-floating-tip-method';
+          methodEl.textContent = method;
+
+          const valueEl = document.createElement('span');
+          valueEl.className = 'benchmark-floating-tip-value';
+          valueEl.textContent = formatValue(value, panel.unit);
+
+          row.append(swatch, methodEl, valueEl);
+          list.append(row);
+        });
+
+        tooltip.append(list);
+        tooltip.classList.add('visible');
+        tooltip.setAttribute('aria-hidden', 'false');
+      };
+
+      const moveTooltip = (event) => {
+        if (!event || event.clientX === undefined) return;
+        const area = mount.parentElement.getBoundingClientRect();
+        const tipW = tooltip.offsetWidth || 180;
+        const tipH = tooltip.offsetHeight || 56;
+        const x = Math.min(Math.max(event.clientX - area.left + 14, 8), area.width - tipW - 8);
+        const y = Math.min(Math.max(event.clientY - area.top + 14, 8), area.height - tipH - 8);
+        tooltip.style.transform = `translate(${x}px, ${y}px)`;
+      };
+
+      const renderBenchmark = (id) => {
+        const benchmark = benchmarks[id];
+        if (!benchmark) return;
+        mount.replaceChildren();
+        benchmark.panels.forEach((panel) => {
+          mount.appendChild(buildPanel(panel, benchmark.name));
+        });
+        commentary.textContent = benchmark.commentary;
+        renderIdleReadout(benchmark);
+      };
+
+      tabBar.addEventListener('click', (event) => {
+        const target = event.target.closest('.benchmark-tab');
+        if (!target) return;
+        const id = target.dataset.benchmark;
+        if (!id || !benchmarks[id]) return;
+        tabBar.querySelectorAll('.benchmark-tab').forEach((node) => {
+          const isActive = node === target;
+          node.classList.toggle('active', isActive);
+          node.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        renderBenchmark(id);
+      });
+
+      renderBenchmark('raven-qa');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const root = document.getElementById('deployment-detail');
+      const filters = document.getElementById('deployment-filters');
+      const environments = document.getElementById('deployment-environments');
+      const gallery = document.getElementById('deployment-gallery');
+      const detailImg = document.getElementById('deployment-detail-img');
+      const detailQuery = document.getElementById('deployment-detail-query');
+      const detailEyebrow = document.getElementById('deployment-detail-eyebrow');
+      const detailTitle = document.getElementById('deployment-detail-title');
+      const detailLead = document.getElementById('deployment-detail-lead');
+      const detailStatus = document.getElementById('deployment-detail-status');
+      if (!root || !filters || !environments || !gallery || !detailImg) return;
+
+      const SUCCESS = 'success';
+      const FAILURE = 'failure';
+
+      const ROLLOUT_BASE = './static/images/rollouts/';
+      const LOCATIONS = [
+        { id: 'Lab 1', map: 'map-lab-1.jpg' },
+        { id: 'Office', map: 'map-office.jpg' },
+        { id: 'Lab 2', map: 'map-lab-2.jpg' },
+        { id: 'Public Area', map: 'map-public-area.jpg' }
+      ];
+
+      const PANELS = [
+        { slug: 'safety-cones', title: 'Safety Cones', query: 'Dominant', location: 'Lab 1',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'teddy-bear', title: 'Teddy Bear', query: 'Secondary', location: 'Lab 1',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'ultimaker-s5-material', title: 'Ultimaker S5 Material', query: 'Information Recall', location: 'Lab 1',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'volleyball', title: 'Volleyball', query: 'Secondary', location: 'Lab 1',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'hammer', title: 'Hammer', query: 'Secondary', location: 'Lab 1',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', FAILURE]] },
+        { slug: 'calibration-board', title: 'Calibration Board', query: 'Secondary', location: 'Office',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', FAILURE], ['VLM Only', SUCCESS]] },
+        { slug: 'fire-extinguisher', title: 'Fire Extinguisher', query: 'Secondary', location: 'Office',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', FAILURE], ['VLM Only', SUCCESS]] },
+        { slug: 'floor-fan', title: 'Floor Fan', query: 'Secondary', location: 'Office',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'tripod', title: 'Tripod', query: 'Dominant', location: 'Office',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'clothes', title: 'Clothes', query: 'Reasoning', location: 'Office',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', FAILURE]] },
+        { slug: 'stand-fan', title: 'Stand Fan', query: 'Dominant', location: 'Lab 2',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'play-some-sports', title: 'Play some sports', query: 'Reasoning', location: 'Lab 2',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', FAILURE]] },
+        { slug: 'trash-bin', title: 'Trash Bin', query: 'Dominant', location: 'Lab 2',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'controller-box', title: 'Controller Box', query: 'Reasoning', location: 'Lab 2',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', FAILURE], ['VLM Only', SUCCESS]] },
+        { slug: 'safety-helmet', title: 'Safety Helmet', query: 'Secondary', location: 'Lab 2',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'presentation-board', title: 'Presentation Board', query: 'Information Recall', location: 'Public Area',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'item-it-mkmx', title: 'Item with "IT MKMX"', query: 'Information Recall', location: 'Public Area',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', FAILURE], ['VLM Only', SUCCESS]] },
+        { slug: 'gap', title: 'Gap', query: 'Reasoning', location: 'Public Area',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', FAILURE], ['VLM Only', FAILURE]] },
+        { slug: 'four-cross-signs', title: 'Four Cross Signs', query: 'Secondary', location: 'Public Area',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', SUCCESS], ['VLM Only', SUCCESS]] },
+        { slug: 'sign', title: 'Sign', query: 'Secondary', location: 'Public Area',
+          status: [['RAVEN', SUCCESS], ['ReMEmbR', FAILURE], ['VLM Only', SUCCESS]] }
+      ];
+
+      const queryDescription = (query) => {
+        switch (query) {
+          case 'Dominant': return 'A prominent object that anchors the scene. RAVEN should retrieve it directly from semantic memory.';
+          case 'Secondary': return 'A smaller, less salient object. Tests fine-grained recall against background distractors.';
+          case 'Reasoning': return 'A query that requires composing memory operations across time, space, and semantics.';
+          case 'Information Recall': return 'Recovering text or symbols observed earlier — a stress test for fine-grained visual memory.';
+          default: return '';
+        }
+      };
+
+      const checkSvg = (kind) => {
+        if (kind === SUCCESS) {
+          return '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        }
+        return '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
+      };
+
+      const renderEnvironments = () => {
+        environments.replaceChildren();
+        LOCATIONS.forEach((loc, idx) => {
+          const tile = document.createElement('div');
+          tile.className = 'deployment-env';
+          tile.innerHTML = `
+            <span class="deployment-env-letter">${String.fromCharCode(65 + idx)}</span>
+            <img src="${ROLLOUT_BASE}${loc.map}" alt="${loc.id} top-down map" loading="lazy">
+            <span class="deployment-env-label">${loc.id}</span>
+          `;
+          environments.append(tile);
+        });
+      };
+
+      const renderFilters = () => {
+        filters.replaceChildren();
+        const items = [{ id: 'all', label: 'All Environments' }, ...LOCATIONS.map((l) => ({ id: l.id, label: l.id }))];
+        items.forEach((item, idx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = `deployment-filter${idx === 0 ? ' active' : ''}`;
+          btn.dataset.location = item.id;
+          btn.textContent = item.label;
+          btn.setAttribute('role', 'tab');
+          btn.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
+          btn.addEventListener('click', () => applyFilter(item.id, btn));
+          filters.append(btn);
+        });
+      };
+
+      const applyFilter = (locationId, activeBtn) => {
+        filters.querySelectorAll('.deployment-filter').forEach((btn) => {
+          const isActive = btn === activeBtn;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        gallery.querySelectorAll('.deployment-card-tile').forEach((card) => {
+          const matches = locationId === 'all' || card.dataset.location === locationId;
+          card.classList.toggle('is-hidden', !matches);
+        });
+
+        const firstVisible = gallery.querySelector('.deployment-card-tile:not(.is-hidden)');
+        if (firstVisible) {
+          activatePanel(firstVisible.dataset.slug, { focus: false, scroll: false });
+        }
+      };
+
+      const renderStatus = (container, panel) => {
+        container.replaceChildren();
+        panel.status.forEach(([method, outcome]) => {
+          const chip = document.createElement('div');
+          chip.className = `deployment-status-chip is-${outcome}`;
+          chip.innerHTML = `
+            <span class="deployment-status-method">${method}</span>
+            <span class="deployment-status-icon">${checkSvg(outcome)}</span>
+          `;
+          container.append(chip);
+        });
+      };
+
+      const activatePanel = (slug, opts = {}) => {
+        const panel = PANELS.find((p) => p.slug === slug);
+        if (!panel) return;
+
+        gallery.querySelectorAll('.deployment-card-tile').forEach((card) => {
+          card.classList.toggle('is-active', card.dataset.slug === slug);
+          if (card.dataset.slug === slug) card.setAttribute('aria-current', 'true');
+          else card.removeAttribute('aria-current');
+        });
+
+        detailImg.src = `${ROLLOUT_BASE}${panel.slug}.jpg`;
+        detailImg.alt = `${panel.title} — ${panel.query} query in ${panel.location}`;
+        detailQuery.textContent = panel.query;
+        detailQuery.dataset.queryType = panel.query.toLowerCase().replace(/\s+/g, '-');
+
+        const visible = PANELS.filter((p) => p.location === panel.location);
+        const indexInLoc = visible.indexOf(panel);
+        detailEyebrow.textContent = `${panel.location} · Example ${indexInLoc + 1} of ${visible.length}`;
+        detailTitle.textContent = panel.title;
+        detailLead.textContent = queryDescription(panel.query);
+        renderStatus(detailStatus, panel);
+
+        if (opts.scroll) {
+          root.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      };
+
+      const renderGallery = () => {
+        gallery.replaceChildren();
+        PANELS.forEach((panel) => {
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className = 'deployment-card-tile';
+          card.dataset.slug = panel.slug;
+          card.dataset.location = panel.location;
+          card.dataset.query = panel.query;
+          card.setAttribute('role', 'listitem');
+          card.setAttribute('aria-label', `${panel.title}, ${panel.query}, ${panel.location}`);
+
+          const wins = panel.status.filter(([, o]) => o === SUCCESS).length;
+
+          card.innerHTML = `
+            <span class="deployment-card-thumb">
+              <img src="${ROLLOUT_BASE}${panel.slug}.jpg" alt="" loading="lazy" decoding="async">
+              <span class="deployment-card-query" data-query-type="${panel.query.toLowerCase().replace(/\s+/g, '-')}">${panel.query}</span>
+            </span>
+            <span class="deployment-card-meta">
+              <span class="deployment-card-title">${panel.title}</span>
+              <span class="deployment-card-location">${panel.location}</span>
+            </span>
+            <span class="deployment-card-status" aria-label="Methods that succeeded: ${wins} of 3">
+              ${panel.status.map(([method, outcome]) => `
+                <span class="deployment-card-pip is-${outcome}" title="${method}: ${outcome === SUCCESS ? 'success' : 'failure'}">
+                  ${checkSvg(outcome)}
+                </span>
+              `).join('')}
+            </span>
+          `;
+
+          card.addEventListener('click', () => activatePanel(panel.slug, { scroll: true }));
+          card.addEventListener('mouseenter', () => activatePanel(panel.slug));
+          card.addEventListener('focus', () => activatePanel(panel.slug));
+
+          gallery.append(card);
+        });
+      };
+
+      renderEnvironments();
+      renderFilters();
+      renderGallery();
+      activatePanel(PANELS[0].slug);
+    });
+  </script>
 </body>
+
 </html>
