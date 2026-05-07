@@ -546,20 +546,12 @@
         spatial: {
           eyebrow: 'Retrieval mode',
           title: 'Spatial proximity',
-          text: 'Queries are filtered by robot pose: return triplets captured within a region or radius — useful for "what was near this location" questions and grounding navigation goals.',
-          example: {
-            label: 'How it would help',
-            text: 'A follow-up like "what else was near the coat stand?" filters the index by pose ≈ [1.71, -4.13, 0.47] and returns the desk, chair, and tripod frames captured within a small radius.'
-          }
+          text: 'Queries are filtered by robot pose: return triplets captured within a region or radius — useful for "what was near this location" questions and grounding navigation goals.'
         },
         temporal: {
           eyebrow: 'Retrieval mode',
           title: 'Temporal window',
-          text: 'Queries are bounded by world-clock time: return triplets captured inside a time window or sequence — useful for "what happened before / after / while" questions.',
-          example: {
-            label: 'How it would help',
-            text: 'A question like "what was the robot looking at right before Adam came back?" returns the frames in chronological order around 19:04, starting from the requested timestamp.'
-          }
+          text: 'Queries are bounded by world-clock time: return triplets captured inside a time window or sequence — useful for "what happened before / after / while" questions.'
         }
       };
 
